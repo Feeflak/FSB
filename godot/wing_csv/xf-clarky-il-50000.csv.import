@@ -1,0 +1,16 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://c7bb8edkep7em"
+
+[deps]
+
+source_file="res://wing_csv/xf-clarky-il-50000.csv"
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

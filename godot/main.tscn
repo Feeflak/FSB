@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://croj4bplqc8y1"]
+
+[ext_resource type="PackedScene" path="res://addons/debug_draw/debug_draw_3d.tscn" id="1_ig7tw"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vrawv"]
+size = Vector2(180.17, 80.315)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k05f4"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vrawv"]
+size = Vector3(214.55994, 75.183105, 194.92944)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k05f4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_vrawv"]
+size = Vector3(1, 0.215, 1)
+
+[sub_resource type="CoefficientLU" id="CoefficientLU_waj2o"]
+initialized = true
+csv_files = Array[String](["wing_csv/xf-clarky-il-50000.csv", "wing_csv/xf-clarky-il-100000.csv", "wing_csv/xf-clarky-il-200000.csv", "wing_csv/xf-clarky-il-500000.csv", "wing_csv/xf-clarky-il-1000000.csv"])
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vrawv"]
+albedo_color = Color(0.69411767, 0.21568628, 1, 1)
+
+[node name="Node3D" type="Node3D" unique_id=1801979803]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=495652073]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05116844, -0.0062656403, 0.031011105)
+mesh = SubResource("PlaneMesh_vrawv")
+surface_material_override/0 = SubResource("StandardMaterial3D_k05f4")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=242731446]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=1443387326]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.15509, -37.091553, 42.43689)
+shape = SubResource("BoxShape3D_vrawv")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=382258926]
+transform = Transform3D(1, 0, 0, 0, 0.9310491, 0.3648939, 0, -0.3648939, 0.9310491, 0.54840183, 3.799799, 2.9757285)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=459588843]
+transform = Transform3D(0.8466614, 0.31846696, 0.42631376, -0.5077666, 0.72315127, 0.46821517, -0.15917826, -0.6128875, 0.7739711, 0, 8.180557, 0)
+
+[node name="RigidBody3D" type="Player" parent="." unique_id=1567704324]
+arrow_color = Color(0.87007844, 0.3663114, 0.9702876, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.855134, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=1261921707]
+shape = SubResource("BoxShape3D_k05f4")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="RigidBody3D" unique_id=548981569]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.021, 0)
+mesh = SubResource("BoxMesh_vrawv")
+
+[node name="DebugDraw3D" parent="." unique_id=1243779255 instance=ExtResource("1_ig7tw")]
+process_priority = 100000
+
+[node name="Wing" type="Wing" parent="." unique_id=1997546949 node_paths=PackedStringArray("debug_draw_3d")]
+chord = 0.015
+span = 0.63
+air_speed = Vector3(0, 0, -33.615)
+debug_line_thickness = 10.0
+coefficient_lu = SubResource("CoefficientLU_waj2o")
+debug_draw_3d = NodePath("../DebugDraw3D")
+transform = Transform3D(0.9999852, 0, -0.005401075, 0, 0.9999999, 0, 0.005401045, 0, 0.999985, 0.72829914, 2.1646113, 0)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Wing" unique_id=1176549789]
+mesh = SubResource("BoxMesh_vrawv")
+surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
