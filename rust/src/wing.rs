@@ -77,7 +77,12 @@ impl Wing {
 
 impl Wing {
     fn get_aerodynamic_value(&self, coefficient: f32, air_speed: Vector3) -> f32 {
-        coefficient * air_speed.length_squared() * self.chord * self.span / 2.
+        coefficient
+            * air_speed.length_squared()
+            * air::air_density(self.base().get_global_position().y)
+            * self.chord
+            * self.span
+            / 2.
     }
     /// deg
     fn calc_aoa(&self, air_speed: Vector3) -> f32 {
@@ -100,7 +105,7 @@ impl Wing {
     }
     fn calc_reynold(&self, air_speed: Vector3) -> f32 {
         (air_speed.length() * self.chord)
-            / air::kinematic_air_density(self.base().get_transform().origin.y)
+            / air::kinematic_air_density(self.base().get_global_position().y)
     }
     pub fn calculate_aerodynamic_data(&mut self, air_speed: Vector3) -> AerodynamicData {
         let aoa = self.calc_aoa(air_speed);
@@ -117,9 +122,16 @@ impl Wing {
         let data = self.calculate_aerodynamic_data(air_speed);
         let base_transform = self.base().get_transform();
         let air_dir = air_speed.try_normalized().unwrap_or(Vector3::FORWARD);
-
-        let lift = air_dir.cross(Vector3::LEFT).normalized() * data.lift;
-        let torque = air_dir.cross(Vector3::DOWN).normalized() * data.pitch;
+        let lift = air_dir
+            .cross(Vector3::LEFT)
+            .try_normalized()
+            .unwrap_or(Vector3::ZERO)
+            * data.lift;
+        let torque = air_dir
+            .cross(Vector3::DOWN)
+            .try_normalized()
+            .unwrap_or(Vector3::ZERO)
+            * data.pitch;
         let drag = air_dir * -data.drag;
 
         let wing_dir = base_transform.basis.col_c();

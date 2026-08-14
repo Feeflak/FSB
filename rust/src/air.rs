@@ -15,6 +15,14 @@ const REFERENCE_DYNAMIC_VISCOSITY_OF_AIR: f32 = 1.716e-5;
 // K
 const SUTHERLAND_CONSTANT_FOR_GAS: f32 = 111.0;
 
+pub fn air_density(altitude: f32) -> f32 {
+    let temp = SEA_LEVEL_TEMPERATURE + altitude * TEMP_LAPSE_RATE;
+    // https://en.wikipedia.org/wiki/International_Standard_Atmosphere
+    let perssure = SEA_LEVEL_PRESSURE
+        * (temp / SEA_LEVEL_TEMPERATURE).powf(GRAVITY / (GAS_CONSTANT_FOR_AIR * TEMP_LAPSE_RATE));
+    // ideal gas law
+    perssure / (GAS_CONSTANT_FOR_AIR * temp)
+}
 /// altitude: meter
 pub fn kinematic_air_density(altitude: f32) -> f32 {
     let temp = SEA_LEVEL_TEMPERATURE + altitude * TEMP_LAPSE_RATE;

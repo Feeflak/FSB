@@ -340,14 +340,21 @@ material = SubResource("StandardMaterial3D_e71vb")
 process_priority = 100000
 
 [node name="Plane" type="Plane" parent="." unique_id=309672855 node_paths=PackedStringArray("wings", "debug_draw_3d")]
-thrust = 64.05
+thrust = 100000.0
 wings = [NodePath("FR"), NodePath("FL"), NodePath("BL"), NodePath("BR"), NodePath("BU")]
 show_debug = true
 debug_draw_3d = NodePath("../DebugDraw3D")
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2953186, 129.95589, 11.938004)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2953186, 130.20502, 11.938004)
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+mass = 3000.0
 center_of_mass_mode = 1
+center_of_mass = Vector3(0, 0, 0.52)
+linear_velocity = Vector3(0, 0, 8.765)
 
 [node name="FR" type="Wing" parent="Plane" unique_id=1997546949 node_paths=PackedStringArray("debug_draw_3d")]
+aoa = -180.0
 chord = 2.856
 span = 5.278
 coefficient_lu = SubResource("CoefficientLU_waj2o")
@@ -360,6 +367,7 @@ mesh = SubResource("BoxMesh_vrawv")
 surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
 
 [node name="FL" type="Wing" parent="Plane" unique_id=476317384 node_paths=PackedStringArray("debug_draw_3d")]
+aoa = -180.0
 chord = 2.856
 span = 5.278
 coefficient_lu = SubResource("CoefficientLU_waj2o")

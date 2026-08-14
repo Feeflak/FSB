@@ -41,7 +41,7 @@ struct WingEffect {
 }
 #[godot_api]
 impl IRigidBody3D for Plane {
-    fn process(&mut self, delta: f64) {
+    fn physics_process(&mut self, delta: f64) {
         let air_speed = self.base().get_linear_velocity();
         let mut effects = Vec::with_capacity(self.wings.len());
         let mut inertia = Vector3::ZERO;
@@ -52,17 +52,17 @@ impl IRigidBody3D for Plane {
                 wing.bind_mut().draw_debug_arrows(air_speed);
             }
             let aero_data = wing.bind_mut().calculate_aerodynamic_data(air_speed);
-            let force = wing.get_basis().inverse()
+            let force = wing.get_basis()
                 * Vector3 {
                     x: 0.,
                     y: aero_data.lift,
                     z: -aero_data.drag,
                 };
-            let torque = wing.get_basis().inverse() * Vector3::UP * aero_data.pitch;
+            let torque = wing.get_basis() * Vector3::UP * aero_data.pitch;
             effects.push(WingEffect {
                 force,
                 torque,
-                pos: wing.get_position(),
+                pos: wing.get_global_position() - self.base().get_global_position(),
             });
         }
 
@@ -77,11 +77,23 @@ impl IRigidBody3D for Plane {
         self.draw_arrow(
             self.base().get_global_position(),
             self.base().get_global_position()
-                + self.base().get_basis().col_c().normalized() * self.thrust,
+                + self
+                    .base()
+                    .get_basis()
+                    .col_c()
+                    .try_normalized()
+                    .unwrap_or(Vector3::ZERO)
+                    * self.thrust,
             Color::MAGENTA,
             1.,
         );
-        let thrust_vector = self.base().get_basis().col_c().normalized() * thrust;
+        let thrust_vector = self
+            .base()
+            .get_basis()
+            .col_c()
+            .try_normalized()
+            .unwrap_or(Vector3::ZERO)
+            * thrust;
 
         let mut rb = self.base_mut();
         rb.apply_force(thrust_vector);
