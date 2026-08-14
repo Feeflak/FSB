@@ -1,0 +1,67 @@
+[gd_resource type="Resource" script_class="Biome" format=3 uid="uid://c7tligpk7bhuq"]
+
+[ext_resource type="Texture2D" uid="uid://070x5fvdh5e7" path="res://ground textures/uncut_grass_oeeb70_1k/Uncut_Grass_oeeb70_1K_BaseColor.jpg" id="1_t5jjv"]
+[ext_resource type="Texture2D" uid="uid://bk5ufqeoaqypt" path="res://ground textures/uncut_grass_oeeb70_1k/Uncut_Grass_oeeb70_1K_Normal.jpg" id="2_s8l2d"]
+[ext_resource type="Script" uid="uid://bm8kbrvv7ojmi" path="res://util/FloatRange.cs" id="3_aapk7"]
+[ext_resource type="Resource" uid="uid://bptncsimhnag2" path="res://objects/grass_1.tres" id="3_lyjxr"]
+[ext_resource type="Resource" uid="uid://d2002gkfojlyd" path="res://objects/grass_2.tres" id="4_fgdf3"]
+[ext_resource type="Resource" uid="uid://b87ytitir83o6" path="res://objects/grass_3.tres" id="5_4ftnp"]
+[ext_resource type="Resource" uid="uid://cui2u77n14qwy" path="res://objects/grass_4.tres" id="6_gt1aq"]
+[ext_resource type="Texture2D" uid="uid://c4vgvt145u3xh" path="res://ground textures/uncut_grass_oeeb70_1k/Uncut_Grass_oeeb70_1K_Roughness.jpg" id="6_lwxx2"]
+[ext_resource type="Script" uid="uid://bqpjjupyok60s" path="res://biomes/Biome.cs" id="7_n46fe"]
+[ext_resource type="Resource" uid="uid://bsjly42o6w7uy" path="res://objects/grass_5.tres" id="7_s4on6"]
+[ext_resource type="Resource" uid="uid://wl6wx01mw0qk" path="res://objects/grass_6.tres" id="8_kg03p"]
+[ext_resource type="Resource" uid="uid://dpqbh5uiambdn" path="res://objects/grass_7.tres" id="9_syjjb"]
+[ext_resource type="Resource" uid="uid://nqhm8l6w2va3" path="res://objects/grass_8.tres" id="10_1p1bt"]
+[ext_resource type="Resource" uid="uid://4sd1d7xcf5c6" path="res://objects/rock_2.tres" id="11_lnvw3"]
+[ext_resource type="Resource" uid="uid://b3i4r6hqegopj" path="res://objects/rock_4.tres" id="12_dva2b"]
+[ext_resource type="Resource" uid="uid://cd6b6gyoi4pke" path="res://objects/rock_13.tres" id="13_ebh43"]
+[ext_resource type="Resource" uid="uid://y8phgrgwxdc" path="res://objects/bush.tres" id="15_dvqly"]
+[ext_resource type="Resource" uid="uid://ipyubv75dvc3" path="res://objects/spruce.tres" id="16_hfefa"]
+[ext_resource type="Script" uid="uid://dch0mlun246nw" path="res://objects/ObjestsGeneration/BiomeObjectsGenData.cs" id="16_jq2hu"]
+[ext_resource type="Resource" uid="uid://duknm75v5yqi2" path="res://objects/birch.tres" id="18_teqi7"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_51hw5"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mhgcs"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_x3xjk"]
+
+[sub_resource type="Resource" id="Resource_hcaj3"]
+script = ExtResource("16_jq2hu")
+trees = [ExtResource("15_dvqly"), ExtResource("16_hfefa"), ExtResource("18_teqi7")]
+grass = [ExtResource("3_lyjxr"), ExtResource("4_fgdf3"), ExtResource("5_4ftnp"), ExtResource("6_gt1aq"), ExtResource("7_s4on6"), ExtResource("8_kg03p"), ExtResource("9_syjjb"), ExtResource("10_1p1bt")]
+rocks = [ExtResource("11_lnvw3"), ExtResource("12_dva2b"), ExtResource("13_ebh43")]
+rotation_noise = SubResource("FastNoiseLite_51hw5")
+scale_noise = SubResource("FastNoiseLite_mhgcs")
+spawn_chance_noise = SubResource("FastNoiseLite_x3xjk")
+metadata/_custom_type_script = "uid://dch0mlun246nw"
+
+[sub_resource type="Resource" id="Resource_8idw5"]
+script = ExtResource("3_aapk7")
+max = 0.6
+metadata/_custom_type_script = "uid://bm8kbrvv7ojmi"
+
+[sub_resource type="Resource" id="Resource_xa2ue"]
+script = ExtResource("3_aapk7")
+min = 0.4
+max = 0.6
+metadata/_custom_type_script = "uid://bm8kbrvv7ojmi"
+
+[sub_resource type="Resource" id="Resource_8qyf7"]
+script = ExtResource("3_aapk7")
+min = 0.4
+max = 0.6
+metadata/_custom_type_script = "uid://bm8kbrvv7ojmi"
+
+[resource]
+script = ExtResource("7_n46fe")
+objects_data = SubResource("Resource_hcaj3")
+preferred_moisture = SubResource("Resource_xa2ue")
+preferred_elevation = SubResource("Resource_8idw5")
+preferred_temperature = SubResource("Resource_8qyf7")
+albedo = ExtResource("1_t5jjv")
+normal = ExtResource("2_s8l2d")
+roughness = ExtResource("6_lwxx2")
+scale = 1.25
+metadata/_custom_type_script = "uid://bqpjjupyok60s"

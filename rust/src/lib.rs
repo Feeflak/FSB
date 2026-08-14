@@ -1,6 +1,7 @@
 pub mod wing;
 pub mod coefficient_lu;
 pub mod air;
+pub mod plane;
 
 use godot::prelude::*;
 
@@ -48,6 +49,9 @@ impl IRigidBody3D for Player {
         //    Color(1.0, 0.85, 0.1),
         //    3.0,
         //  )
+// -->         self.base_mut().apply_force_ex(force).position(transform.local_position).done();
+// var torque_world = airfoil.global_basis * Vector3(0, pitch_torque, 0)
+// plane.apply_torque(torque_world)
 
         self.draw_arrow(Vector3::ZERO, Vector3::ONE * 10., self.arrow_color, 5.);
         // In GDScript, this would be:

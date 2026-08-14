@@ -1,0 +1,94 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://dddw3enkhdlc5"
+path="res://.godot/imported/model.fbx-7c7353b45125fb7b94a1f5153ab83852.scn"
+
+[deps]
+
+source_file="res://model/model.fbx"
+dest_files=["res://.godot/imported/model.fbx-7c7353b45125fb7b94a1f5153ab83852.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+mesh_library/use_node_names_as_mesh_names=false
+array_mesh/deduplicate_surfaces=true
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=true
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"materials": {
+"Alerones_MAT": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://model/Materials/Alerones.tres",
+"use_external/path": "uid://dlqrdpb1cq00q"
+},
+"Cabina_MAT": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://model/Materials/Cabina.tres",
+"use_external/path": "uid://e8e4am7n2i"
+},
+"Chasis_MAT": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://model/Materials/Chasis.tres",
+"use_external/path": "uid://dahdewtepf55w"
+},
+"Helice_MAT": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://model/Materials/Helice.tres",
+"use_external/path": "uid://b8vf83sfrwui0"
+},
+"Motor_MAT": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://model/Materials/Motor.tres",
+"use_external/path": "uid://bpoolulv2gyw5"
+},
+"Pernos_MAT": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://model/Materials/Pernos.tres",
+"use_external/path": "uid://b4vggaxf3tcc7"
+},
+"Ruedas_MAT": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://model/Materials/Ruderas.tres",
+"use_external/path": "uid://yj26u8x0nsvi"
+},
+"Tensor_MAT": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://model/Materials/Tensor.tres",
+"use_external/path": "uid://dpab3qefod2ct"
+},
+"Tren_aterrizaje_MAT": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://model/Materials/Tren.tres",
+"use_external/path": "uid://db25sdlfq8vll"
+}
+}
+}
+fbx/importer=0
+fbx/allow_geometry_helper_nodes=false
+fbx/embedded_image_handling=1
+fbx/naming_version=2

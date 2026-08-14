@@ -1,0 +1,17 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://db25sdlfq8vll"]
+
+[ext_resource type="Texture2D" uid="uid://c8ejlq3g286re" path="res://Player/Plane examples/propeller plane small/model/textures/Tren/Tren_aterrizaje_MAT_albedo.jpg" id="1_m515k"]
+[ext_resource type="Texture2D" uid="uid://cpb0slh8rh8c2" path="res://Player/Plane examples/propeller plane small/model/textures/Tren/Tren_aterrizaje_MAT_AO.jpg" id="2_tjxlf"]
+[ext_resource type="Texture2D" uid="uid://rk4kuucjshdl" path="res://Player/Plane examples/propeller plane small/model/textures/Tren/Tren_aterrizaje_MAT_metallic.jpg" id="3_8f3eo"]
+[ext_resource type="Texture2D" uid="uid://bcb6hfyf1v0b2" path="res://Player/Plane examples/propeller plane small/model/textures/Tren/Tren_aterrizaje_MAT_normal.png" id="4_8icv0"]
+[ext_resource type="Texture2D" uid="uid://702wyn22g68n" path="res://Player/Plane examples/propeller plane small/model/textures/Tren/Tren_aterrizaje_MAT_roughness.jpg" id="5_g15e6"]
+
+[resource]
+albedo_texture = ExtResource("1_m515k")
+metallic = 1.0
+metallic_texture = ExtResource("3_8f3eo")
+roughness_texture = ExtResource("5_g15e6")
+normal_enabled = true
+normal_texture = ExtResource("4_8icv0")
+ao_enabled = true
+ao_texture = ExtResource("2_tjxlf")

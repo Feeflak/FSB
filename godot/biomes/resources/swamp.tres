@@ -1,0 +1,63 @@
+[gd_resource type="Resource" script_class="Biome" format=3 uid="uid://dalilcqe722id"]
+
+[ext_resource type="Texture2D" uid="uid://vvd6a6tp13l1" path="res://ground textures/mud/brown_mud_leaves_01_diff_4k.jpg" id="1_maot3"]
+[ext_resource type="Texture2D" uid="uid://bk5ufqeoaqypt" path="res://ground textures/uncut_grass_oeeb70_1k/Uncut_Grass_oeeb70_1K_Normal.jpg" id="2_yxcxd"]
+[ext_resource type="Resource" uid="uid://bptncsimhnag2" path="res://objects/grass_1.tres" id="3_8fjo1"]
+[ext_resource type="Resource" uid="uid://d2002gkfojlyd" path="res://objects/grass_2.tres" id="4_vbal8"]
+[ext_resource type="Resource" uid="uid://b87ytitir83o6" path="res://objects/grass_3.tres" id="5_04jyc"]
+[ext_resource type="Resource" uid="uid://cui2u77n14qwy" path="res://objects/grass_4.tres" id="6_dpn7m"]
+[ext_resource type="Script" uid="uid://bm8kbrvv7ojmi" path="res://util/FloatRange.cs" id="7_dtbjx"]
+[ext_resource type="Resource" uid="uid://bsjly42o6w7uy" path="res://objects/grass_5.tres" id="7_vl237"]
+[ext_resource type="Resource" uid="uid://wl6wx01mw0qk" path="res://objects/grass_6.tres" id="8_4yuyc"]
+[ext_resource type="Script" uid="uid://bqpjjupyok60s" path="res://biomes/Biome.cs" id="9_dqqsx"]
+[ext_resource type="Texture2D" uid="uid://c4vgvt145u3xh" path="res://ground textures/uncut_grass_oeeb70_1k/Uncut_Grass_oeeb70_1K_Roughness.jpg" id="9_uyxhr"]
+[ext_resource type="Resource" uid="uid://dpqbh5uiambdn" path="res://objects/grass_7.tres" id="9_v2srs"]
+[ext_resource type="Resource" uid="uid://nqhm8l6w2va3" path="res://objects/grass_8.tres" id="10_gclg2"]
+[ext_resource type="Resource" uid="uid://4sd1d7xcf5c6" path="res://objects/rock_2.tres" id="11_10g4n"]
+[ext_resource type="Resource" uid="uid://b3i4r6hqegopj" path="res://objects/rock_4.tres" id="12_5aipy"]
+[ext_resource type="Resource" uid="uid://cd6b6gyoi4pke" path="res://objects/rock_13.tres" id="13_rs0lo"]
+[ext_resource type="Resource" uid="uid://y8phgrgwxdc" path="res://objects/bush.tres" id="15_t0a6r"]
+[ext_resource type="Resource" uid="uid://ipyubv75dvc3" path="res://objects/spruce.tres" id="16_31fr8"]
+[ext_resource type="Script" uid="uid://dch0mlun246nw" path="res://objects/ObjestsGeneration/BiomeObjectsGenData.cs" id="16_heybb"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_51hw5"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mhgcs"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_x3xjk"]
+
+[sub_resource type="Resource" id="Resource_3cpby"]
+script = ExtResource("16_heybb")
+trees = [ExtResource("15_t0a6r"), ExtResource("16_31fr8")]
+grass = [ExtResource("3_8fjo1"), ExtResource("4_vbal8"), ExtResource("5_04jyc"), ExtResource("6_dpn7m"), ExtResource("7_vl237"), ExtResource("8_4yuyc"), ExtResource("9_v2srs"), ExtResource("10_gclg2")]
+rocks = [ExtResource("11_10g4n"), ExtResource("12_5aipy"), ExtResource("13_rs0lo")]
+rotation_noise = SubResource("FastNoiseLite_51hw5")
+scale_noise = SubResource("FastNoiseLite_mhgcs")
+spawn_chance_noise = SubResource("FastNoiseLite_x3xjk")
+metadata/_custom_type_script = "uid://dch0mlun246nw"
+
+[sub_resource type="Resource" id="Resource_r8cx7"]
+script = ExtResource("7_dtbjx")
+max = 0.6
+
+[sub_resource type="Resource" id="Resource_x0ii4"]
+script = ExtResource("7_dtbjx")
+min = 0.6
+max = 1.0
+
+[sub_resource type="Resource" id="Resource_dtbjx"]
+script = ExtResource("7_dtbjx")
+min = 0.3
+max = 0.6
+
+[resource]
+script = ExtResource("9_dqqsx")
+objects_data = SubResource("Resource_3cpby")
+preferred_moisture = SubResource("Resource_x0ii4")
+preferred_elevation = SubResource("Resource_r8cx7")
+preferred_temperature = SubResource("Resource_dtbjx")
+albedo = ExtResource("1_maot3")
+normal = ExtResource("2_yxcxd")
+roughness = ExtResource("9_uyxhr")
+scale = 1.25
+metadata/_custom_type_script = "uid://bqpjjupyok60s"

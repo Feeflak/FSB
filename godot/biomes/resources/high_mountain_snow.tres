@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="Biome" format=3 uid="uid://bwyc1o1fgbmuv"]
+
+[ext_resource type="Texture2D" uid="uid://b2k6c88vjl8pt" path="res://ground textures/fresh_windswept_snow_ugspafgdy_1k/Fresh_Windswept_Snow_ugspafgdy_1K_BaseColor.jpg" id="1_6ru70"]
+[ext_resource type="Texture2D" uid="uid://2oh52cjspouj" path="res://ground textures/fresh_windswept_snow_ugspafgdy_1k/Fresh_Windswept_Snow_ugspafgdy_1K_Normal.jpg" id="2_ki50r"]
+[ext_resource type="Resource" uid="uid://bptncsimhnag2" path="res://objects/grass_1.tres" id="3_d5ctm"]
+[ext_resource type="Script" uid="uid://bm8kbrvv7ojmi" path="res://util/FloatRange.cs" id="7_ua0ou"]
+[ext_resource type="Texture2D" uid="uid://sa2rdm3wb2tm" path="res://ground textures/fresh_windswept_snow_ugspafgdy_1k/Fresh_Windswept_Snow_ugspafgdy_1K_Roughness.jpg" id="8_tbcr6"]
+[ext_resource type="Resource" uid="uid://dpqbh5uiambdn" path="res://objects/grass_7.tres" id="9_e8bjs"]
+[ext_resource type="Script" uid="uid://bqpjjupyok60s" path="res://biomes/Biome.cs" id="9_wo5uk"]
+[ext_resource type="Resource" uid="uid://nqhm8l6w2va3" path="res://objects/grass_8.tres" id="10_msrsp"]
+[ext_resource type="Resource" uid="uid://4sd1d7xcf5c6" path="res://objects/rock_2.tres" id="11_pxhmp"]
+[ext_resource type="Resource" uid="uid://b3i4r6hqegopj" path="res://objects/rock_4.tres" id="12_834de"]
+[ext_resource type="Resource" uid="uid://cd6b6gyoi4pke" path="res://objects/rock_13.tres" id="13_1tw14"]
+[ext_resource type="Script" uid="uid://dch0mlun246nw" path="res://objects/ObjestsGeneration/BiomeObjectsGenData.cs" id="16_2v3ys"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_51hw5"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mhgcs"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_x3xjk"]
+
+[sub_resource type="Resource" id="Resource_122tf"]
+script = ExtResource("16_2v3ys")
+trees = []
+grass = [ExtResource("3_d5ctm"), ExtResource("9_e8bjs"), ExtResource("10_msrsp")]
+rocks = [ExtResource("11_pxhmp"), ExtResource("12_834de"), ExtResource("13_1tw14")]
+rotation_noise = SubResource("FastNoiseLite_51hw5")
+scale_noise = SubResource("FastNoiseLite_mhgcs")
+spawn_chance_noise = SubResource("FastNoiseLite_x3xjk")
+metadata/_custom_type_script = "uid://dch0mlun246nw"
+
+[sub_resource type="Resource" id="Resource_6ru70"]
+script = ExtResource("7_ua0ou")
+min = 0.7
+max = 1.0
+
+[sub_resource type="Resource" id="Resource_ki50r"]
+script = ExtResource("7_ua0ou")
+max = 1.0
+
+[sub_resource type="Resource" id="Resource_tbcr6"]
+script = ExtResource("7_ua0ou")
+max = 0.3
+
+[resource]
+script = ExtResource("9_wo5uk")
+objects_data = SubResource("Resource_122tf")
+preferred_moisture = SubResource("Resource_ki50r")
+preferred_elevation = SubResource("Resource_6ru70")
+preferred_temperature = SubResource("Resource_tbcr6")
+albedo = ExtResource("1_6ru70")
+normal = ExtResource("2_ki50r")
+roughness = ExtResource("8_tbcr6")
+scale = 1.25
+metadata/_custom_type_script = "uid://bqpjjupyok60s"

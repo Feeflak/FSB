@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://daao70h1yf656"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hok53"]
+radius = 0.009277344
+height = 0.1105957
+
+[node name="Poplar" type="Node3D" unique_id=1050264817]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1397395888]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00073892064, 0.05529785, -0.0009377003)
+shape = SubResource("CapsuleShape3D_hok53")

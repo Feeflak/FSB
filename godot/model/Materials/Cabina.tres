@@ -1,0 +1,19 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://e8e4am7n2i"]
+
+[ext_resource type="Texture2D" uid="uid://kr36hohcqtkm" path="res://Player/Plane examples/propeller plane small/model/textures/Cabina/Cabina_MAT_albedo.jpg" id="1_xkhfj"]
+[ext_resource type="Texture2D" uid="uid://cihs50s40uy7n" path="res://Player/Plane examples/propeller plane small/model/textures/Cabina/Cabina_MAT_AO.jpg" id="2_y2mtl"]
+[ext_resource type="Texture2D" uid="uid://b4srag0c2gkuo" path="res://Player/Plane examples/propeller plane small/model/textures/Cabina/Cabina_MAT_metallic.jpg" id="3_bqd84"]
+[ext_resource type="Texture2D" uid="uid://boyfstqirx6qg" path="res://Player/Plane examples/propeller plane small/model/textures/Cabina/Cabina_MAT_normal.png" id="4_68sec"]
+[ext_resource type="Texture2D" uid="uid://ccnhy42i3al4x" path="res://Player/Plane examples/propeller plane small/model/textures/Cabina/Cabina_MAT_roughness.jpg" id="5_72n4v"]
+
+[resource]
+transparency = 1
+albedo_texture = ExtResource("1_xkhfj")
+albedo_texture_force_srgb = true
+metallic = 1.0
+metallic_texture = ExtResource("3_bqd84")
+roughness_texture = ExtResource("5_72n4v")
+normal_enabled = true
+normal_texture = ExtResource("4_68sec")
+ao_enabled = true
+ao_texture = ExtResource("2_y2mtl")

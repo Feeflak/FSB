@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://dpab3qefod2ct"]
+
+[ext_resource type="Texture2D" uid="uid://5gs6pw1dk535" path="res://Player/Plane examples/propeller plane small/model/textures/Tensor/Tensor_MAT_albedo.jpg" id="1_e8q68"]
+[ext_resource type="Texture2D" uid="uid://db1i853cqdpx0" path="res://Player/Plane examples/propeller plane small/model/textures/Tensor/Tensor_MAT_AO.jpg" id="2_jgajo"]
+[ext_resource type="Texture2D" uid="uid://df7r305bqkyxu" path="res://Player/Plane examples/propeller plane small/model/textures/Tensor/Tensor_MAT_metallic.jpg" id="3_moa5n"]
+[ext_resource type="Texture2D" uid="uid://n5wbrnljomxi" path="res://Player/Plane examples/propeller plane small/model/textures/Tensor/Tensor_MAT_normal.png" id="4_mvq5c"]
+[ext_resource type="Texture2D" uid="uid://dxyo8fqmaq25r" path="res://Player/Plane examples/propeller plane small/model/textures/Tensor/Tensor_MAT_roughness.jpg" id="5_a6e1l"]
+
+[resource]
+albedo_texture = ExtResource("1_e8q68")
+albedo_texture_force_srgb = true
+metallic = 1.0
+metallic_texture = ExtResource("3_moa5n")
+roughness_texture = ExtResource("5_a6e1l")
+normal_enabled = true
+normal_texture = ExtResource("4_mvq5c")
+ao_enabled = true
+ao_texture = ExtResource("2_jgajo")

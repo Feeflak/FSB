@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://cohn25v4j6dgp"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ealrb"]
+height = 0.10205371
+radius = 0.0053710938
+
+[node name="AshCollider" type="CollisionShape3D" unique_id=926464623]
+transform = Transform3D(0.99999857, 0, 0, 0, 0.99999857, 0, 0, 0, 0.99999857, 0, 0.051292185, 0)
+shape = SubResource("CylinderShape3D_ealrb")

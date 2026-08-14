@@ -1,0 +1,53 @@
+[gd_resource type="Resource" script_class="Biome" format=3 uid="uid://ciu68hetij58k"]
+
+[ext_resource type="Texture2D" uid="uid://rj6a6u47sfua" path="res://ground textures/rippled_sand_xd0mda1_1k/Rippled_Sand_xd0mda1_1K_BaseColor.jpg" id="1_exehw"]
+[ext_resource type="Texture2D" uid="uid://hwx7vg81eeg7" path="res://ground textures/rippled_sand_xd0mda1_1k/Rippled_Sand_xd0mda1_1K_Normal.jpg" id="2_kvwqf"]
+[ext_resource type="Resource" uid="uid://nqhm8l6w2va3" path="res://objects/grass_8.tres" id="3_p7o0e"]
+[ext_resource type="Script" uid="uid://dch0mlun246nw" path="res://objects/ObjestsGeneration/BiomeObjectsGenData.cs" id="3_q46x5"]
+[ext_resource type="Script" uid="uid://bm8kbrvv7ojmi" path="res://util/FloatRange.cs" id="4_4wpcj"]
+[ext_resource type="Resource" uid="uid://4sd1d7xcf5c6" path="res://objects/rock_2.tres" id="4_v3twc"]
+[ext_resource type="Texture2D" uid="uid://oqskrlja41cw" path="res://ground textures/rippled_sand_xd0mda1_1k/Rippled_Sand_xd0mda1_1K_Roughness.jpg" id="5_64o33"]
+[ext_resource type="Resource" uid="uid://b3i4r6hqegopj" path="res://objects/rock_4.tres" id="5_dqtqy"]
+[ext_resource type="Resource" uid="uid://cd6b6gyoi4pke" path="res://objects/rock_13.tres" id="6_oicxs"]
+[ext_resource type="Script" uid="uid://bqpjjupyok60s" path="res://biomes/Biome.cs" id="6_wfmk1"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_51hw5"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mhgcs"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_x3xjk"]
+
+[sub_resource type="Resource" id="Resource_vtisd"]
+script = ExtResource("3_q46x5")
+trees = []
+grass = [ExtResource("3_p7o0e")]
+rocks = [ExtResource("4_v3twc"), ExtResource("5_dqtqy"), ExtResource("6_oicxs")]
+rotation_noise = SubResource("FastNoiseLite_51hw5")
+scale_noise = SubResource("FastNoiseLite_mhgcs")
+spawn_chance_noise = SubResource("FastNoiseLite_x3xjk")
+metadata/_custom_type_script = "uid://dch0mlun246nw"
+
+[sub_resource type="Resource" id="Resource_exehw"]
+script = ExtResource("4_4wpcj")
+max = 0.4
+
+[sub_resource type="Resource" id="Resource_kvwqf"]
+script = ExtResource("4_4wpcj")
+max = 0.3
+
+[sub_resource type="Resource" id="Resource_8syi6"]
+script = ExtResource("4_4wpcj")
+min = 0.7
+max = 1.0
+
+[resource]
+script = ExtResource("6_wfmk1")
+objects_data = SubResource("Resource_vtisd")
+preferred_moisture = SubResource("Resource_kvwqf")
+preferred_elevation = SubResource("Resource_exehw")
+preferred_temperature = SubResource("Resource_8syi6")
+albedo = ExtResource("1_exehw")
+normal = ExtResource("2_kvwqf")
+roughness = ExtResource("5_64o33")
+scale = 1.25
+metadata/_custom_type_script = "uid://bqpjjupyok60s"

@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bwkpppsbosg8m"]
+
+[ext_resource type="Texture2D" uid="uid://b5rk3rfhjqpt1" path="res://Data/objects spawning/Assets/Low poly trees - free nature pack/Textures/Rocks/RocksDark.png" id="1_8dvlv"]
+
+[resource]
+albedo_texture = ExtResource("1_8dvlv")

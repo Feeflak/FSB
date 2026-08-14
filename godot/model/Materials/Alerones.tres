@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://dlqrdpb1cq00q"]
+
+[ext_resource type="Texture2D" uid="uid://ceh4jv5tny00" path="res://Player/Plane examples/propeller plane small/model/textures/Alerones/Alerones_MAT_albedo.jpg" id="1_ilo4n"]
+[ext_resource type="Texture2D" uid="uid://dn1781pcdhajs" path="res://Player/Plane examples/propeller plane small/model/textures/Alerones/Alerones_MAT_AO.jpg" id="2_ypjy0"]
+[ext_resource type="Texture2D" uid="uid://v5o5afh0tdni" path="res://Player/Plane examples/propeller plane small/model/textures/Alerones/Alerones_MAT_metallic.jpg" id="3_o33ks"]
+[ext_resource type="Texture2D" uid="uid://j3l0a38bgr5f" path="res://Player/Plane examples/propeller plane small/model/textures/Alerones/Alerones_MAT_normal.png" id="4_ywafo"]
+[ext_resource type="Texture2D" uid="uid://cyhcalgu64his" path="res://Player/Plane examples/propeller plane small/model/textures/Alerones/Alerones_MAT_roughness.jpg" id="5_c7wxd"]
+
+[resource]
+albedo_texture = ExtResource("1_ilo4n")
+albedo_texture_force_srgb = true
+metallic = 1.0
+metallic_texture = ExtResource("3_o33ks")
+roughness_texture = ExtResource("5_c7wxd")
+normal_enabled = true
+normal_texture = ExtResource("4_ywafo")
+ao_enabled = true
+ao_texture = ExtResource("2_ypjy0")

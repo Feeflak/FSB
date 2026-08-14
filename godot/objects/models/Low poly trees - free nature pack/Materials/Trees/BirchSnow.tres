@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dqqnbdvi6r4xn"]
+
+[ext_resource type="Texture2D" uid="uid://cwy0j7a70chbf" path="res://Data/objects spawning/Assets/Low poly trees - free nature pack/Textures/Trees/BirchSnow.png" id="1_kp0ds"]
+
+[resource]
+albedo_texture = ExtResource("1_kp0ds")

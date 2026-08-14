@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://b8vf83sfrwui0"]
+
+[ext_resource type="Texture2D" uid="uid://dwxii7o1fm8x4" path="res://Player/Plane examples/propeller plane small/model/textures/Helice/Helice_MAT_albedo.jpg" id="1_euuc1"]
+[ext_resource type="Texture2D" uid="uid://bi31c5ra63wlt" path="res://Player/Plane examples/propeller plane small/model/textures/Helice/Helice_MAT_AO.jpg" id="2_gsojt"]
+[ext_resource type="Texture2D" uid="uid://cigd4c0cnhpje" path="res://Player/Plane examples/propeller plane small/model/textures/Helice/Helice_MAT_metallic.jpg" id="3_wsmi6"]
+[ext_resource type="Texture2D" uid="uid://ce5y0ba68abfw" path="res://Player/Plane examples/propeller plane small/model/textures/Helice/Helice_MAT_normal.png" id="4_t4rn3"]
+[ext_resource type="Texture2D" uid="uid://drjn0iuxkr6mc" path="res://Player/Plane examples/propeller plane small/model/textures/Helice/Helice_MAT_roughness.jpg" id="5_x8nsp"]
+
+[resource]
+albedo_texture = ExtResource("1_euuc1")
+albedo_texture_force_srgb = true
+metallic = 1.0
+metallic_texture = ExtResource("3_wsmi6")
+roughness_texture = ExtResource("5_x8nsp")
+normal_enabled = true
+normal_texture = ExtResource("4_t4rn3")
+ao_enabled = true
+ao_texture = ExtResource("2_gsojt")

@@ -1,0 +1,6 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://i3kia1w0ptfy"]
+
+[ext_resource type="Texture2D" uid="uid://b1kkglh3p2d8y" path="res://Data/objects spawning/Assets/Low poly trees - free nature pack/Textures/Trees/Poplar.png" id="1_3uarb"]
+
+[resource]
+albedo_texture = ExtResource("1_3uarb")

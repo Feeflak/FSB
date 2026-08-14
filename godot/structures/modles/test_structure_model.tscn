@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dwae3jwam7b45"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_vimvf"]
+size = Vector3(100, 60, 100)
+
+[node name="test structure model" type="MeshInstance3D" unique_id=1654686017]
+mesh = SubResource("BoxMesh_vimvf")

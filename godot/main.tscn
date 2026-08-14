@@ -1,69 +1,521 @@
 [gd_scene format=3 uid="uid://croj4bplqc8y1"]
 
 [ext_resource type="PackedScene" path="res://addons/debug_draw/debug_draw_3d.tscn" id="1_ig7tw"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_vrawv"]
-size = Vector2(180.17, 80.315)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k05f4"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_vrawv"]
-size = Vector3(214.55994, 75.183105, 194.92944)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_k05f4"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_vrawv"]
-size = Vector3(1, 0.215, 1)
+[ext_resource type="PackedScene" uid="uid://dddw3enkhdlc5" path="res://model/model.fbx" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://ckougtl1epv7n" path="res://GenerationController.cs" id="3_qsp4k"]
+[ext_resource type="Resource" uid="uid://ciu68hetij58k" path="res://biomes/resources/desert.tres" id="4_kq58d"]
+[ext_resource type="Resource" uid="uid://bmstcmmc38flq" path="res://biomes/resources/dry_grass.tres" id="5_seu75"]
+[ext_resource type="Resource" uid="uid://bjntftk3kutwh" path="res://biomes/resources/high_mountain_green.tres" id="6_htxhm"]
+[ext_resource type="Resource" uid="uid://bwyc1o1fgbmuv" path="res://biomes/resources/high_mountain_snow.tres" id="7_jq2sk"]
+[ext_resource type="Resource" uid="uid://c7tligpk7bhuq" path="res://biomes/resources/plains.tres" id="8_4k2k6"]
+[ext_resource type="Resource" uid="uid://dpmmjjeg0xibs" path="res://biomes/resources/snow.tres" id="9_0rl1p"]
+[ext_resource type="Resource" uid="uid://dalilcqe722id" path="res://biomes/resources/swamp.tres" id="10_ok6jj"]
+[ext_resource type="PackedScene" uid="uid://bp4nr0hn2m0dt" path="res://chunk.tscn" id="11_facbu"]
+[ext_resource type="Script" uid="uid://b7vnabd1g6tr8" path="res://structures/StructureGen.cs" id="12_b1qrp"]
+[ext_resource type="PackedScene" uid="uid://dwae3jwam7b45" path="res://structures/modles/test_structure_model.tscn" id="13_come4"]
+[ext_resource type="Script" uid="uid://w1egd0ivsh5v" path="res://structures/StructureType.cs" id="14_h8e4i"]
+[ext_resource type="Script" uid="uid://dfcupjxxdf7pq" path="res://structures/structure_shapes/RectangleStructureShape.cs" id="15_4lmeg"]
+[ext_resource type="PackedScene" uid="uid://cyk0s20hihm3p" path="res://structures/modles/low_poly_city/Separate_assets_fbx/Eco_Building_Grid.fbx" id="16_0cp0l"]
+[ext_resource type="PackedScene" uid="uid://w5kibnwqnu8u" path="res://structures/modles/low_poly_city/Separate_assets_fbx/Eco_Building_Terrace.fbx" id="17_d2t1y"]
+[ext_resource type="Script" uid="uid://ie6lidlhojfd" path="res://biomes/BiomeGenerator.cs" id="18_gngh3"]
+[ext_resource type="Script" uid="uid://bmptihf7ojyyf" path="res://ground/GroundShaderController.cs" id="19_0n3wm"]
+[ext_resource type="Texture2D" uid="uid://datjc43rk68k1" path="res://ground textures/rock_cliff_xccibbi_1k/Rock_Cliff_xccibbi_1K_BaseColor.jpg" id="20_qnost"]
+[ext_resource type="Texture2D" uid="uid://qy8avu837ct5" path="res://ground textures/rock_cliff_xccibbi_1k/Rock_Cliff_xccibbi_1K_Normal.jpg" id="21_wnkbs"]
+[ext_resource type="Texture2D" uid="uid://cap62wxor08qv" path="res://ground textures/rock_cliff_xccibbi_1k/Rock_Cliff_xccibbi_1K_Roughness.jpg" id="22_f6a44"]
+[ext_resource type="Material" uid="uid://difr1umt0wq45" path="res://ground_material.tres" id="23_0cbny"]
+[ext_resource type="Script" uid="uid://duqibi8br3aen" path="res://biomes/terrain_aspect/TerrainAspectsSolver.cs" id="24_hrvbo"]
+[ext_resource type="Script" uid="uid://cyylqtwxb5xm2" path="res://util/NoisePart.cs" id="25_uypp3"]
+[ext_resource type="Script" uid="uid://cyc8wghcqqnc5" path="res://util/NoiseComponent.cs" id="26_blkrb"]
+[ext_resource type="Script" uid="uid://bx5dm3v24ouvl" path="res://ground/GroundMeshGen.cs" id="27_abqjc"]
+[ext_resource type="Script" uid="uid://duat4j40jft0v" path="res://ground/TerrainAspectEffectOnMesh.cs" id="28_6iyjs"]
+[ext_resource type="Script" uid="uid://bmni8uj46ikxf" path="res://objects/ObjestsGeneration/ObjectsGenerator.cs" id="29_4w656"]
 
 [sub_resource type="CoefficientLU" id="CoefficientLU_waj2o"]
 initialized = true
 csv_files = Array[String](["wing_csv/xf-clarky-il-50000.csv", "wing_csv/xf-clarky-il-100000.csv", "wing_csv/xf-clarky-il-200000.csv", "wing_csv/xf-clarky-il-500000.csv", "wing_csv/xf-clarky-il-1000000.csv"])
 
+[sub_resource type="BoxMesh" id="BoxMesh_vrawv"]
+size = Vector3(5.277588, 0.215, 2.855957)
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vrawv"]
 albedo_color = Color(0.69411767, 0.21568628, 1, 1)
 
+[sub_resource type="BoxMesh" id="BoxMesh_h2yge"]
+size = Vector3(2.112915, 0.215, 1.5665283)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s8a0o"]
+size = Vector3(13.349243, 0.5048828, 9.16507)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_k05f4"]
+radius = 0.3255914
+
+[sub_resource type="Resource" id="Resource_o4fqm"]
+script = ExtResource("15_4lmeg")
+base_size = Vector2(58.266, 35.55)
+sample_points_spacing = 1.0
+metadata/_custom_type_script = "uid://dfcupjxxdf7pq"
+
+[sub_resource type="Resource" id="Resource_meb7l"]
+script = ExtResource("14_h8e4i")
+shapes = [SubResource("Resource_o4fqm")]
+maximal_height_delta_inside_the_shapes = 20.0
+spawn_chance = 1.0
+model = ExtResource("13_come4")
+scale_change_amplitude = 0.3
+min_distance_from_grid_border_in_mesh_chunks = 1
+metadata/_custom_type_script = "uid://w1egd0ivsh5v"
+
+[sub_resource type="Resource" id="Resource_w30ff"]
+script = ExtResource("15_4lmeg")
+base_size = Vector2(87.399, 53.325)
+sample_points_spacing = 1.0
+metadata/_custom_type_script = "uid://dfcupjxxdf7pq"
+
+[sub_resource type="Resource" id="Resource_xy6fp"]
+script = ExtResource("14_h8e4i")
+shapes = [SubResource("Resource_w30ff")]
+maximal_height_delta_inside_the_shapes = 100.0
+spawn_chance = 1.0
+model = ExtResource("16_0cp0l")
+base_scale = 1.5
+scale_change_amplitude = 0.3
+min_distance_from_grid_border_in_mesh_chunks = 1
+generation_attempts_per_structure_chunk = 15
+metadata/_custom_type_script = "uid://w1egd0ivsh5v"
+
+[sub_resource type="Resource" id="Resource_uws2o"]
+script = ExtResource("15_4lmeg")
+base_size = Vector2(61.179, 105.584)
+sample_points_spacing = 1.0
+metadata/_custom_type_script = "uid://dfcupjxxdf7pq"
+
+[sub_resource type="Resource" id="Resource_yj5sn"]
+script = ExtResource("14_h8e4i")
+shapes = [SubResource("Resource_uws2o")]
+maximal_height_delta_inside_the_shapes = 100.0
+spawn_chance = 1.0
+model = ExtResource("17_d2t1y")
+base_scale = 1.5
+scale_change_amplitude = 0.3
+min_distance_from_grid_border_in_mesh_chunks = 1
+generation_attempts_per_structure_chunk = 15
+metadata/_custom_type_script = "uid://w1egd0ivsh5v"
+
+[sub_resource type="Gradient" id="Gradient_84odl"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_m35m6"]
+frequency = 0.0151
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_u0ygc"]
+noise = SubResource("FastNoiseLite_m35m6")
+color_ramp = SubResource("Gradient_84odl")
+seamless = true
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kv3aw"]
+seed = -599
+frequency = 0.3
+fractal_octaves = 2
+fractal_lacunarity = 1.965
+
+[sub_resource type="Resource" id="Resource_o7u2a"]
+script = ExtResource("25_uypp3")
+noise = SubResource("FastNoiseLite_kv3aw")
+amplitude = 1.0
+frequency = 0.001
+metadata/_custom_type_script = "uid://cyylqtwxb5xm2"
+
+[sub_resource type="Resource" id="Resource_ijoax"]
+script = ExtResource("26_blkrb")
+noises = [SubResource("Resource_o7u2a")]
+metadata/_custom_type_script = "uid://cyc8wghcqqnc5"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_j8kkg"]
+seed = 1540
+frequency = 0.3
+
+[sub_resource type="Resource" id="Resource_yh4yk"]
+script = ExtResource("25_uypp3")
+noise = SubResource("FastNoiseLite_j8kkg")
+amplitude = 1.0
+frequency = 0.001
+metadata/_custom_type_script = "uid://cyylqtwxb5xm2"
+
+[sub_resource type="Resource" id="Resource_p8s74"]
+script = ExtResource("26_blkrb")
+noises = [SubResource("Resource_yh4yk")]
+metadata/_custom_type_script = "uid://cyc8wghcqqnc5"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_o4fqm"]
+seed = 107
+frequency = 0.3
+
+[sub_resource type="Resource" id="Resource_gfmxp"]
+script = ExtResource("25_uypp3")
+noise = SubResource("FastNoiseLite_o4fqm")
+amplitude = 1.0
+frequency = 0.001
+metadata/_custom_type_script = "uid://cyylqtwxb5xm2"
+
+[sub_resource type="Resource" id="Resource_1n88h"]
+script = ExtResource("26_blkrb")
+noises = [SubResource("Resource_gfmxp")]
+metadata/_custom_type_script = "uid://cyc8wghcqqnc5"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_84odl"]
+
+[sub_resource type="Resource" id="Resource_vimvf"]
+script = ExtResource("25_uypp3")
+noise = SubResource("FastNoiseLite_84odl")
+amplitude = 20.0
+frequency = 0.8
+metadata/_custom_type_script = "uid://cyylqtwxb5xm2"
+
+[sub_resource type="Resource" id="Resource_ghshe"]
+script = ExtResource("26_blkrb")
+noises = [SubResource("Resource_vimvf")]
+metadata/_custom_type_script = "uid://cyc8wghcqqnc5"
+
+[sub_resource type="Resource" id="Resource_fv2he"]
+script = ExtResource("25_uypp3")
+noise = SubResource("FastNoiseLite_84odl")
+amplitude = 100.0
+frequency = 0.1
+metadata/_custom_type_script = "uid://cyylqtwxb5xm2"
+
+[sub_resource type="Resource" id="Resource_5smuj"]
+script = ExtResource("26_blkrb")
+noises = [SubResource("Resource_fv2he")]
+metadata/_custom_type_script = "uid://cyc8wghcqqnc5"
+
+[sub_resource type="Resource" id="Resource_y5ved"]
+script = ExtResource("25_uypp3")
+noise = SubResource("FastNoiseLite_84odl")
+amplitude = 600.0
+frequency = 0.01
+metadata/_custom_type_script = "uid://cyylqtwxb5xm2"
+
+[sub_resource type="Resource" id="Resource_kv3aw"]
+script = ExtResource("26_blkrb")
+noises = [SubResource("Resource_y5ved")]
+metadata/_custom_type_script = "uid://cyc8wghcqqnc5"
+
+[sub_resource type="Curve" id="Curve_ak604"]
+_data = [Vector2(0.50207037, 0), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_vimvf"]
+
+[sub_resource type="Curve" id="Curve_ghshe"]
+
+[sub_resource type="Curve" id="Curve_fv2he"]
+
+[sub_resource type="Resource" id="Resource_j8kkg"]
+script = ExtResource("28_6iyjs")
+base_height = SubResource("Curve_ak604")
+low_freq_noise_amplitude = SubResource("Curve_ghshe")
+medium_freq_noise_amplitude = SubResource("Curve_fv2he")
+high_freq_noise_amplitude = SubResource("Curve_vimvf")
+metadata/_custom_type_script = "uid://duat4j40jft0v"
+
+[sub_resource type="Curve" id="Curve_yh4yk"]
+_limits = [0.0, 600.0, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.33540374, 0), 0.0, 0.0, 0, 0, Vector2(0.95962733, 600), 18.265919, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_p8s74"]
+_data = [Vector2(0, 0.077608764), 0.0, 0.0, 0, 0, Vector2(1, 0.70335156), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_o4fqm"]
+_data = [Vector2(0, 0.19348705), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[sub_resource type="Curve" id="Curve_gfmxp"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.37681162, 0.2645591), 0.0, 0.0, 0, 0, Vector2(0.69875777, 0), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Resource" id="Resource_opjno"]
+script = ExtResource("28_6iyjs")
+base_height = SubResource("Curve_yh4yk")
+low_freq_noise_amplitude = SubResource("Curve_o4fqm")
+medium_freq_noise_amplitude = SubResource("Curve_gfmxp")
+high_freq_noise_amplitude = SubResource("Curve_p8s74")
+metadata/_custom_type_script = "uid://duat4j40jft0v"
+
+[sub_resource type="Curve" id="Curve_meb7l"]
+_data = [Vector2(0.50207037, 0), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_w30ff"]
+
+[sub_resource type="Curve" id="Curve_xy6fp"]
+
+[sub_resource type="Curve" id="Curve_uws2o"]
+
+[sub_resource type="Resource" id="Resource_iylel"]
+script = ExtResource("28_6iyjs")
+base_height = SubResource("Curve_meb7l")
+low_freq_noise_amplitude = SubResource("Curve_xy6fp")
+medium_freq_noise_amplitude = SubResource("Curve_uws2o")
+high_freq_noise_amplitude = SubResource("Curve_w30ff")
+metadata/_custom_type_script = "uid://duat4j40jft0v"
+
+[sub_resource type="Curve" id="Curve_yj5sn"]
+_data = [Vector2(0.50207037, 0), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_jtbqm"]
+
+[sub_resource type="Curve" id="Curve_ek5vw"]
+
+[sub_resource type="Curve" id="Curve_jip8q"]
+
+[sub_resource type="Resource" id="Resource_euc68"]
+script = ExtResource("28_6iyjs")
+base_height = SubResource("Curve_yj5sn")
+low_freq_noise_amplitude = SubResource("Curve_ek5vw")
+medium_freq_noise_amplitude = SubResource("Curve_jip8q")
+high_freq_noise_amplitude = SubResource("Curve_jtbqm")
+metadata/_custom_type_script = "uid://duat4j40jft0v"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_o7u2a"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ijoax"]
+noise = SubResource("FastNoiseLite_o7u2a")
+seamless = true
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vimvf"]
+sky_top_color = Color(0.20824888, 0.577609, 0.9999942, 1)
+sky_horizon_color = Color(0.6203545, 0.7790852, 0.965982, 1)
+sky_curve = 0.39585498
+sky_cover = SubResource("NoiseTexture2D_ijoax")
+sky_cover_modulate = Color(0.3994281, 0.39942774, 0.39942777, 1)
+ground_bottom_color = Color(0.6203545, 0.7790852, 0.965982, 1)
+ground_horizon_color = Color(0.6203545, 0.7790852, 0.965982, 1)
+ground_curve = 1.1812913
+sun_angle_max = 15.85
+
+[sub_resource type="Sky" id="Sky_ghshe"]
+sky_material = SubResource("ProceduralSkyMaterial_vimvf")
+
+[sub_resource type="Environment" id="Environment_fv2he"]
+background_mode = 2
+sky = SubResource("Sky_ghshe")
+ambient_light_source = 2
+ambient_light_color = Color(0.61474454, 0.6147446, 0.6147445, 1)
+reflected_light_source = 1
+tonemap_mode = 2
+tonemap_exposure = 0.65
+ssr_enabled = true
+ssao_enabled = true
+ssil_enabled = true
+sdfgi_enabled = true
+sdfgi_read_sky_light = false
+glow_enabled = true
+fog_density = 0.054
+fog_aerial_perspective = 0.145
+fog_sky_affect = 0.326
+volumetric_fog_density = 0.4938
+volumetric_fog_emission_energy = 0.0
+volumetric_fog_anisotropy = 0.29
+volumetric_fog_length = 727.97
+volumetric_fog_detail_spread = 6.0
+volumetric_fog_sky_affect = 0.222
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ak604"]
+auto_exposure_enabled = true
+auto_exposure_scale = 0.55
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e71vb"]
+albedo_color = Color(0.39308554, 0.3930855, 0.39308548, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_s8a0o"]
+material = SubResource("StandardMaterial3D_e71vb")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k05f4"]
+
 [node name="Node3D" type="Node3D" unique_id=1801979803]
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=495652073]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05116844, -0.0062656403, 0.031011105)
-mesh = SubResource("PlaneMesh_vrawv")
-surface_material_override/0 = SubResource("StandardMaterial3D_k05f4")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D" unique_id=242731446]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D" unique_id=1443387326]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.15509, -37.091553, 42.43689)
-shape = SubResource("BoxShape3D_vrawv")
-
-[node name="Camera3D" type="Camera3D" parent="." unique_id=382258926]
-transform = Transform3D(1, 0, 0, 0, 0.9310491, 0.3648939, 0, -0.3648939, 0.9310491, 0.54840183, 3.799799, 2.9757285)
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=459588843]
-transform = Transform3D(0.8466614, 0.31846696, 0.42631376, -0.5077666, 0.72315127, 0.46821517, -0.15917826, -0.6128875, 0.7739711, 0, 8.180557, 0)
-
-[node name="RigidBody3D" type="Player" parent="." unique_id=1567704324]
-arrow_color = Color(0.87007844, 0.3663114, 0.9702876, 1)
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.855134, 0)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=1261921707]
-shape = SubResource("BoxShape3D_k05f4")
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="RigidBody3D" unique_id=548981569]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.021, 0)
-mesh = SubResource("BoxMesh_vrawv")
 
 [node name="DebugDraw3D" parent="." unique_id=1243779255 instance=ExtResource("1_ig7tw")]
 process_priority = 100000
 
-[node name="Wing" type="Wing" parent="." unique_id=1997546949 node_paths=PackedStringArray("debug_draw_3d")]
-chord = 0.015
-span = 0.63
-air_speed = Vector3(0, 0, -33.615)
-debug_line_thickness = 10.0
-coefficient_lu = SubResource("CoefficientLU_waj2o")
+[node name="Plane" type="Plane" parent="." unique_id=309672855 node_paths=PackedStringArray("wings", "debug_draw_3d")]
+thrust = 64.05
+wings = [NodePath("FR"), NodePath("FL"), NodePath("BL"), NodePath("BR"), NodePath("BU")]
+show_debug = true
 debug_draw_3d = NodePath("../DebugDraw3D")
-transform = Transform3D(0.9999852, 0, -0.005401075, 0, 0.9999999, 0, 0.005401045, 0, 0.999985, 0.72829914, 2.1646113, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2953186, 129.95589, 11.938004)
+center_of_mass_mode = 1
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Wing" unique_id=1176549789]
+[node name="FR" type="Wing" parent="Plane" unique_id=1997546949 node_paths=PackedStringArray("debug_draw_3d")]
+chord = 2.856
+span = 5.278
+coefficient_lu = SubResource("CoefficientLU_waj2o")
+debug_draw_3d = NodePath("../../DebugDraw3D")
+transform = Transform3D(0.9994305, 0.033752654, 0, -0.033752657, 0.99943036, 0, 0, 0, 0.99999964, -3.2889748, 0.030075073, 1.4870358)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane/FR" unique_id=1176549789]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004940033, -0.1458435, 0)
 mesh = SubResource("BoxMesh_vrawv")
 surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
+
+[node name="FL" type="Wing" parent="Plane" unique_id=476317384 node_paths=PackedStringArray("debug_draw_3d")]
+chord = 2.856
+span = 5.278
+coefficient_lu = SubResource("CoefficientLU_waj2o")
+debug_draw_3d = NodePath("../../DebugDraw3D")
+transform = Transform3D(0.99970174, -0.024432182, 0, 0.024432184, 0.9997016, 0, 0, 0, 0.99999964, 3.4540646, -0.10714722, 1.4870358)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane/FL" unique_id=2037605068]
+visible = false
+mesh = SubResource("BoxMesh_vrawv")
+surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
+
+[node name="BL" type="Wing" parent="Plane" unique_id=1261310730 node_paths=PackedStringArray("debug_draw_3d")]
+aoa = 180.0
+chord = 1.567
+span = 2.113
+coefficient_lu = SubResource("CoefficientLU_waj2o")
+debug_draw_3d = NodePath("../../DebugDraw3D")
+transform = Transform3D(1.0000005, 0, 0, 0, 1.0000002, 0, 0, 0, 0.9999994, 1.1270528, -0.41931152, -3.6688328)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane/BL" unique_id=1988903205]
+visible = false
+mesh = SubResource("BoxMesh_h2yge")
+surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
+
+[node name="BR" type="Wing" parent="Plane" unique_id=23365311 node_paths=PackedStringArray("debug_draw_3d")]
+aoa = 180.0
+chord = 1.567
+span = 2.113
+coefficient_lu = SubResource("CoefficientLU_waj2o")
+debug_draw_3d = NodePath("../../DebugDraw3D")
+transform = Transform3D(1.0000005, 0, 0, 0, 1.0000002, 0, 0, 0, 0.9999994, -1.1974435, -0.41931152, -3.6688328)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane/BR" unique_id=947731367]
+visible = false
+mesh = SubResource("BoxMesh_h2yge")
+surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
+
+[node name="BU" type="Wing" parent="Plane" unique_id=133303997 node_paths=PackedStringArray("debug_draw_3d")]
+aoa = -180.0
+chord = 1.567
+span = 2.113
+coefficient_lu = SubResource("CoefficientLU_waj2o")
+debug_draw_3d = NodePath("../../DebugDraw3D")
+transform = Transform3D(-4.371143e-08, -1.0000005, 0, 1.000001, -4.371141e-08, 0, 0, 0, 0.9999988, 0.020040512, -0.19146729, -3.787879)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane/BU" unique_id=1178410055]
+visible = false
+mesh = SubResource("BoxMesh_h2yge")
+surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
+
+[node name="model" parent="Plane" unique_id=470752549 instance=ExtResource("2_0xm2m")]
+transform = Transform3D(1.26, 0, 0, 0, 1.26, 0, 0, 0, 1.26, 0, -1.6009369, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Plane" unique_id=1505641200]
+transform = Transform3D(1, 0, 0, 0, 0.9876968, 0.15638097, 0, -0.15638097, 0.9876968, -0.76190186, -0.46310425, 0.5464506)
+shape = SubResource("BoxShape3D_s8a0o")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Plane" unique_id=349414292]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.61205626, -1.3720703, 2.253934)
+shape = SubResource("SphereShape3D_k05f4")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Plane" unique_id=630470122]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6619525, -1.3720703, 2.253934)
+shape = SubResource("SphereShape3D_k05f4")
+
+[node name="Camera3D" type="Camera3D" parent="Plane" unique_id=382258926]
+transform = Transform3D(-0.9999179, -0.004675371, 0.011929492, -0.004156914, 0.9990612, 0.04312076, -0.012119898, 0.043067634, -0.99899864, 0.008444786, 0.75845337, 0.9103279)
+
+[node name="Main scene" type="Node3D" parent="." unique_id=325302715]
+
+[node name="Generation controller" type="Node3D" parent="Main scene" unique_id=1772107324 node_paths=PackedStringArray("player", "ground_mesh_gen", "biome_generator", "ground_shader_controller", "objects_generator", "structure_gen")]
+transform = Transform3D(1.11, 0, 0, 0, 1.11, 0, 0, 0, 1.11, 0, 0, 0)
+script = ExtResource("3_qsp4k")
+terrain_chunk_size = 100
+biomes = [ExtResource("4_kq58d"), ExtResource("5_seu75"), ExtResource("6_htxhm"), ExtResource("7_jq2sk"), ExtResource("8_4k2k6"), ExtResource("9_0rl1p"), ExtResource("10_ok6jj")]
+max_main_thread_chunk_instantiation_per_frame = 1
+player = NodePath("../../Plane")
+view_distance_chunks = 5
+chunk_prefab = ExtResource("11_facbu")
+ground_mesh_gen = NodePath("../ground mesh gen")
+biome_generator = NodePath("../biome generator")
+ground_shader_controller = NodePath("../ground shader controller")
+objects_generator = NodePath("../objects generator")
+structure_gen = NodePath("../structure gen")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Main scene" unique_id=1002644790]
+transform = Transform3D(0.5036318, 4.471945, 8.930178, 0.3185028, -8.944169, 4.4609895, 9.982231, 0.059759136, -0.5928894, 0, 0, 0)
+light_energy = 1.574
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 2.236
+shadow_enabled = true
+
+[node name="structure gen" type="Node" parent="Main scene" unique_id=976059663]
+script = ExtResource("12_b1qrp")
+structure_pool = [SubResource("Resource_meb7l"), SubResource("Resource_xy6fp"), SubResource("Resource_yj5sn")]
+mesh_chunks_per_structure_grid_cell = 20
+
+[node name="biome generator" type="Node" parent="Main scene" unique_id=1876212071 node_paths=PackedStringArray("terrain_aspects_solver")]
+script = ExtResource("18_gngh3")
+biome_map_resolution = 15
+terrain_aspects_solver = NodePath("../terrain aspects solver")
+biome_transitions_smoothness = 0.1
+
+[node name="ground shader controller" type="Node" parent="Main scene" unique_id=113452430]
+script = ExtResource("19_0n3wm")
+rock_texture = ExtResource("20_qnost")
+rock_normal_map = ExtResource("21_wnkbs")
+rock_roughness = ExtResource("22_f6a44")
+rock_scale = 0.2
+rock_color_gain = 1.1
+global_color_gain = 0.2
+global_color_offset = 0.1
+post_processing_noise = SubResource("NoiseTexture2D_u0ygc")
+post_processing_noise_scale = 0.055
+post_processing_albedo_influence = 0.2
+metallic = 0.375
+spectacular = 0.205
+ground_shader_material = ExtResource("23_0cbny")
+
+[node name="terrain aspects solver" type="Node" parent="Main scene" unique_id=1425684243]
+script = ExtResource("24_hrvbo")
+elevation_noise = SubResource("Resource_ijoax")
+temperature_noise = SubResource("Resource_p8s74")
+moisture_noise = SubResource("Resource_1n88h")
+slope_calculation_step_size = 1.0
+slope_roughness_effect = 1.0
+
+[node name="ground mesh gen" type="Node" parent="Main scene" unique_id=1234028555 node_paths=PackedStringArray("terrain_aspects_solver")]
+script = ExtResource("27_abqjc")
+terrain_aspects_solver = NodePath("../terrain aspects solver")
+resolution = 50
+high_frequency_noise = SubResource("Resource_ghshe")
+medium_frequency_noise = SubResource("Resource_5smuj")
+low_frequency_noise = SubResource("Resource_kv3aw")
+moisture_effect = SubResource("Resource_j8kkg")
+elevation_effect = SubResource("Resource_opjno")
+temperature_effect = SubResource("Resource_iylel")
+roughness_effect = SubResource("Resource_euc68")
+
+[node name="objects generator" type="Node" parent="Main scene" unique_id=396190395 node_paths=PackedStringArray("ground_mesh_gen")]
+script = ExtResource("29_4w656")
+ground_mesh_gen = NodePath("../ground mesh gen")
+minimal_tree_spacing = 10.0
+base_tree_spawn_chance = 0.166
+rock_spawn_attempts_per_mesh_chunk = 2
+grass_spawn_attempts_per_mesh_chunk = 100
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Main scene" unique_id=1132014786]
+environment = SubResource("Environment_fv2he")
+camera_attributes = SubResource("CameraAttributesPractical_ak604")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Main scene" unique_id=424937987]
+transform = Transform3D(34.56, 0, 0, 0, 19.84, 0, 0, 0, 551.92, -6.465, 118.041, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Main scene/StaticBody3D" unique_id=555297316]
+mesh = SubResource("BoxMesh_s8a0o")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Main scene/StaticBody3D" unique_id=2078665653]
+shape = SubResource("BoxShape3D_k05f4")

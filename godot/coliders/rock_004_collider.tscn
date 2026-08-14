@@ -1,0 +1,12 @@
+[gd_scene format=3 uid="uid://ctw7ukeoevf66"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_yh4yk"]
+radius = 0.00793457
+height = 0.01586914
+
+[node name="Rock_004" type="Node3D" unique_id=1324014145]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=495952921]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0134887695, 0.0013427734)
+shape = SubResource("CapsuleShape3D_yh4yk")

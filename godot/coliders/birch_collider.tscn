@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dl73trl8ib5yv"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1ffxy"]
+radius = 0.017089844
+height = 0.10095215
+
+[node name="Birch" type="Node3D" unique_id=2008390802]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=191443880]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0055759363, 0.044262208, 0)
+shape = SubResource("CapsuleShape3D_1ffxy")

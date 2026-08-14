@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" load_steps=6 format=3 uid="uid://b4vggaxf3tcc7"]
+
+[ext_resource type="Texture2D" uid="uid://cmggo7nuhn4ip" path="res://Player/Plane examples/propeller plane small/model/textures/Pernos/Pernos_MAT_albedo.jpg" id="1_amekj"]
+[ext_resource type="Texture2D" uid="uid://ykigoeu8io15" path="res://Player/Plane examples/propeller plane small/model/textures/Pernos/Pernos_MAT_AO.jpg" id="2_x2knp"]
+[ext_resource type="Texture2D" uid="uid://c7oaa7mvc712m" path="res://Player/Plane examples/propeller plane small/model/textures/Pernos/Pernos_MAT_metallic.jpg" id="3_c3c51"]
+[ext_resource type="Texture2D" uid="uid://dviuhevewduux" path="res://Player/Plane examples/propeller plane small/model/textures/Pernos/Pernos_MAT_normal.png" id="4_tnlnq"]
+[ext_resource type="Texture2D" uid="uid://pfn3l3hvsrf0" path="res://Player/Plane examples/propeller plane small/model/textures/Pernos/Pernos_MAT_roughness.jpg" id="5_dssfw"]
+
+[resource]
+albedo_texture = ExtResource("1_amekj")
+albedo_texture_force_srgb = true
+metallic = 1.0
+metallic_texture = ExtResource("3_c3c51")
+roughness_texture = ExtResource("5_dssfw")
+normal_enabled = true
+normal_texture = ExtResource("4_tnlnq")
+ao_enabled = true
+ao_texture = ExtResource("2_x2knp")

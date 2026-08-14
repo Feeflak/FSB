@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://b8o5osutjbnxu"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_y5ved"]
+radius = 0.010253906
+height = 0.036274403
+
+[node name="Sapling_003" type="Node3D" unique_id=1367980430]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1715393758]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0018963097, 0.016247556, 0)
+shape = SubResource("CapsuleShape3D_y5ved")
