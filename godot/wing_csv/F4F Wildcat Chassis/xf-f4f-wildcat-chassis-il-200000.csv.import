@@ -1,0 +1,16 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://7ehwv0agq0yi"
+
+[deps]
+
+source_file="res://wing_csv/F4F Wildcat Chassis/xf-f4f-wildcat-chassis-il-200000.csv"
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

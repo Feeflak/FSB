@@ -30,18 +30,53 @@
 [ext_resource type="Script" uid="uid://duat4j40jft0v" path="res://ground/TerrainAspectEffectOnMesh.cs" id="28_6iyjs"]
 [ext_resource type="Script" uid="uid://bmni8uj46ikxf" path="res://objects/ObjestsGeneration/ObjectsGenerator.cs" id="29_4w656"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qsp4k"]
+friction = 0.34
+absorbent = true
+
+[sub_resource type="CoefficientLU" id="CoefficientLU_kq58d"]
+initialized = true
+csv_files = Array[String](["wing_csv/F4F Wildcat Chassis/xf-f4f-wildcat-chassis-il-50000.csv", "wing_csv/F4F Wildcat Chassis/xf-f4f-wildcat-chassis-il-100000.csv", "wing_csv/F4F Wildcat Chassis/xf-f4f-wildcat-chassis-il-200000.csv", "wing_csv/F4F Wildcat Chassis/xf-f4f-wildcat-chassis-il-500000.csv", "wing_csv/F4F Wildcat Chassis/xf-f4f-wildcat-chassis-il-1000000.csv"])
+
+[sub_resource type="Flap" id="Flap_seu75"]
+action_name_to_respond = "roll_left"
+aoa_change = 1.0
+
+[sub_resource type="Flap" id="Flap_htxhm"]
+action_name_to_respond = "roll_right"
+aoa_change = -1.0
+
 [sub_resource type="CoefficientLU" id="CoefficientLU_waj2o"]
 initialized = true
 csv_files = Array[String](["wing_csv/xf-clarky-il-50000.csv", "wing_csv/xf-clarky-il-100000.csv", "wing_csv/xf-clarky-il-200000.csv", "wing_csv/xf-clarky-il-500000.csv", "wing_csv/xf-clarky-il-1000000.csv"])
 
-[sub_resource type="BoxMesh" id="BoxMesh_vrawv"]
-size = Vector3(5.277588, 0.215, 2.855957)
+[sub_resource type="Flap" id="Flap_jq2sk"]
+action_name_to_respond = "roll_left"
+aoa_change = -3.0
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vrawv"]
-albedo_color = Color(0.69411767, 0.21568628, 1, 1)
+[sub_resource type="Flap" id="Flap_4k2k6"]
+action_name_to_respond = "roll_right"
+aoa_change = 3.0
 
-[sub_resource type="BoxMesh" id="BoxMesh_h2yge"]
-size = Vector3(2.112915, 0.215, 1.5665283)
+[sub_resource type="Flap" id="Flap_qsp4k"]
+action_name_to_respond = "pitch_up"
+aoa_change = 12.0
+
+[sub_resource type="Flap" id="Flap_kq58d"]
+action_name_to_respond = "pitch_down"
+aoa_change = -12.0
+
+[sub_resource type="Flap" id="Flap_0rl1p"]
+action_name_to_respond = "yaw_left"
+aoa_change = 8.0
+
+[sub_resource type="Flap" id="Flap_ok6jj"]
+action_name_to_respond = "yaw_right"
+aoa_change = -8.0
+
+[sub_resource type="CoefficientLU" id="CoefficientLU_qsp4k"]
+initialized = true
+csv_files = Array[String](["wing_csv/NACA 0012/xf-n0012-il-50000.csv", "wing_csv/NACA 0012/xf-n0012-il-100000.csv", "wing_csv/NACA 0012/xf-n0012-il-200000.csv", "wing_csv/NACA 0012/xf-n0012-il-500000.csv", "wing_csv/NACA 0012/xf-n0012-il-1000000.csv"])
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_s8a0o"]
 size = Vector3(13.349243, 0.5048828, 9.16507)
@@ -334,118 +369,153 @@ material = SubResource("StandardMaterial3D_e71vb")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_k05f4"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qsp4k"]
+bg_color = Color(0, 0, 0, 1)
+
 [node name="Node3D" type="Node3D" unique_id=1801979803]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 
 [node name="DebugDraw3D" parent="." unique_id=1243779255 instance=ExtResource("1_ig7tw")]
 process_priority = 100000
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
+line_width = 25.8
 
-[node name="Plane" type="Plane" parent="." unique_id=309672855 node_paths=PackedStringArray("wings", "debug_draw_3d")]
-thrust = 100000.0
-wings = [NodePath("FR"), NodePath("FL"), NodePath("BL"), NodePath("BR"), NodePath("BU")]
+[node name="Plane" type="Plane" parent="." unique_id=309672855 node_paths=PackedStringArray("cameras", "aoa_label", "aoa_label_wing", "speed_label", "wings", "debug_draw_3d")]
+cameras = [NodePath("cam_1"), NodePath("cam_2")]
+aoa_label = NodePath("../CanvasLayer/AOA")
+aoa_label_wing = NodePath("FR")
+speed_label = NodePath("../CanvasLayer/Speed")
+thrust = 36000.0
+wings = [NodePath("FR"), NodePath("FL"), NodePath("BL"), NodePath("BU"), NodePath("BR"), NodePath("Chassis")]
 show_debug = true
 debug_draw_3d = NodePath("../DebugDraw3D")
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2953186, 130.20502, 11.938004)
-axis_lock_angular_x = true
-axis_lock_angular_y = true
-axis_lock_angular_z = true
-mass = 3000.0
+transform = Transform3D(0.9999998, 0, 0, 0, 0.9999968, 0.0027530794, 0, -0.002753081, 0.9999962, 0, 872.4247, -5254.5674)
+mass = 2300.0
+physics_material_override = SubResource("PhysicsMaterial_qsp4k")
 center_of_mass_mode = 1
-center_of_mass = Vector3(0, 0, 0.52)
-linear_velocity = Vector3(0, 0, 8.765)
+center_of_mass = Vector3(0.00087406347, -0.12439711, -2.1922452)
+inertia = Vector3(6250, 2500, 6250)
+linear_velocity = Vector3(0, -1.81, 96.89)
+angular_damp = 2.268
+
+[node name="Chassis" type="Wing" parent="Plane" unique_id=1918677222 node_paths=PackedStringArray("debug_draw_3d")]
+dry_mass = 1000.0
+max_fuel_mass = 500.0
+debug_airfoil_height = 1.875
+center_of_mass_offset = Vector3(0, 0, 2.525)
+root_point = Vector3(0.8, 0, 0)
+root_chord = 7.0
+tip_point = Vector3(-0.405, 0, 0)
+tip_chord = 7.0
+debug_scale = 4.21
+coefficient_lu = SubResource("CoefficientLU_kq58d")
+debug_draw_3d = NodePath("../../DebugDraw3D")
+transform = Transform3D(1.0000005, 0, 0, 0, 1.0000002, 0, 0, 0, 0.9999993, 0, 0, -2.8789063)
 
 [node name="FR" type="Wing" parent="Plane" unique_id=1997546949 node_paths=PackedStringArray("debug_draw_3d")]
-aoa = -180.0
-chord = 2.856
-span = 5.278
+flaps = Array[Flap]([SubResource("Flap_seu75"), SubResource("Flap_htxhm")])
+dry_mass = 400.0
+max_fuel_mass = 500.0
+debug_airfoil_height = 0.215
+center_of_mass_offset = Vector3(0, 0, 0.395)
+root_point = Vector3(2.365, 0, -0.445)
+root_chord = 2.545
+tip_point = Vector3(-2.945, 0, -0.195)
+tip_chord = 1.615
+debug_scale = 4.21
 coefficient_lu = SubResource("CoefficientLU_waj2o")
 debug_draw_3d = NodePath("../../DebugDraw3D")
-transform = Transform3D(0.9994305, 0.033752654, 0, -0.033752657, 0.99943036, 0, 0, 0, 0.99999964, -3.2889748, 0.030075073, 1.4870358)
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane/FR" unique_id=1176549789]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004940033, -0.1458435, 0)
-mesh = SubResource("BoxMesh_vrawv")
-surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
+transform = Transform3D(1.0000002, 0, 0, 0, 1.0000001, 0, 0, 0, 0.99999964, -3.0000005, -0.14849854, -2.0048828)
 
 [node name="FL" type="Wing" parent="Plane" unique_id=476317384 node_paths=PackedStringArray("debug_draw_3d")]
-aoa = -180.0
-chord = 2.856
-span = 5.278
+flaps = Array[Flap]([SubResource("Flap_jq2sk"), SubResource("Flap_4k2k6")])
+dry_mass = 400.0
+max_fuel_mass = 500.0
+debug_airfoil_height = 0.23
+center_of_mass_offset = Vector3(0, 0, 0.395)
+root_point = Vector3(-2.365, 0, -0.445)
+root_chord = 2.545
+tip_point = Vector3(2.945, 0, -0.195)
+tip_chord = 1.615
+debug_scale = 4.21
 coefficient_lu = SubResource("CoefficientLU_waj2o")
 debug_draw_3d = NodePath("../../DebugDraw3D")
-transform = Transform3D(0.99970174, -0.024432182, 0, 0.024432184, 0.9997016, 0, 0, 0, 0.99999964, 3.4540646, -0.10714722, 1.4870358)
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane/FL" unique_id=2037605068]
-visible = false
-mesh = SubResource("BoxMesh_vrawv")
-surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
+transform = Transform3D(1.0000002, 0, 0, 0, 1.0000001, 0, 0, 0, 0.99999964, 3, -0.148, -2)
 
 [node name="BL" type="Wing" parent="Plane" unique_id=1261310730 node_paths=PackedStringArray("debug_draw_3d")]
-aoa = 180.0
-chord = 1.567
-span = 2.113
+flaps = Array[Flap]([SubResource("Flap_qsp4k"), SubResource("Flap_kq58d")])
+dry_mass = 200.0
+debug_airfoil_height = 0.17
+center_of_mass_offset = Vector3(0, 0, 0.395)
+root_point = Vector3(-1.09, 0, 0)
+root_chord = 1.565
+tip_point = Vector3(0.985, 0, -0.22)
+tip_chord = 0.84
+debug_scale = 4.21
 coefficient_lu = SubResource("CoefficientLU_waj2o")
 debug_draw_3d = NodePath("../../DebugDraw3D")
-transform = Transform3D(1.0000005, 0, 0, 0, 1.0000002, 0, 0, 0, 0.9999994, 1.1270528, -0.41931152, -3.6688328)
+transform = Transform3D(1.0000005, 0, 0, 0, 1.0000002, 0, 0, 0, 0.99999946, 1.1270529, -0.41931152, -7.1741943)
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane/BL" unique_id=1988903205]
-visible = false
-mesh = SubResource("BoxMesh_h2yge")
-surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
-
-[node name="BR" type="Wing" parent="Plane" unique_id=23365311 node_paths=PackedStringArray("debug_draw_3d")]
-aoa = 180.0
-chord = 1.567
-span = 2.113
+[node name="BR" type="Wing" parent="Plane" unique_id=76391437 node_paths=PackedStringArray("debug_draw_3d")]
+flaps = Array[Flap]([SubResource("Flap_qsp4k"), SubResource("Flap_kq58d")])
+dry_mass = 200.0
+debug_airfoil_height = 0.17
+center_of_mass_offset = Vector3(0, 0, 0.395)
+root_point = Vector3(1.09, 0, 0)
+root_chord = 1.565
+tip_point = Vector3(-0.985, 0, -0.22)
+tip_chord = 0.84
+debug_scale = 4.21
 coefficient_lu = SubResource("CoefficientLU_waj2o")
 debug_draw_3d = NodePath("../../DebugDraw3D")
-transform = Transform3D(1.0000005, 0, 0, 0, 1.0000002, 0, 0, 0, 0.9999994, -1.1974435, -0.41931152, -3.6688328)
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane/BR" unique_id=947731367]
-visible = false
-mesh = SubResource("BoxMesh_h2yge")
-surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
+transform = Transform3D(1.0000005, 0, 0, 0, 1.0000002, 0, 0, 0, 0.99999946, -1.117, -0.419, -7.174)
 
 [node name="BU" type="Wing" parent="Plane" unique_id=133303997 node_paths=PackedStringArray("debug_draw_3d")]
-aoa = -180.0
-chord = 1.567
-span = 2.113
-coefficient_lu = SubResource("CoefficientLU_waj2o")
+flaps = Array[Flap]([SubResource("Flap_0rl1p"), SubResource("Flap_ok6jj")])
+dry_mass = 100.0
+debug_airfoil_height = 0.13
+center_of_mass_offset = Vector3(0, 0, 0.395)
+root_point = Vector3(-0.86, 0, 0.445)
+root_chord = 2.27
+tip_point = Vector3(0.845, 0, -0.33)
+tip_chord = 0.9
+debug_scale = 4.21
+coefficient_lu = SubResource("CoefficientLU_qsp4k")
 debug_draw_3d = NodePath("../../DebugDraw3D")
-transform = Transform3D(-4.371143e-08, -1.0000005, 0, 1.000001, -4.371141e-08, 0, 0, 0, 0.9999988, 0.020040512, -0.19146729, -3.787879)
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="Plane/BU" unique_id=1178410055]
-visible = false
-mesh = SubResource("BoxMesh_h2yge")
-surface_material_override/0 = SubResource("StandardMaterial3D_vrawv")
+transform = Transform3D(-4.371143e-08, -1.0000005, 0, 1.000001, -4.371141e-08, 0, 0, 0, 0.99999887, 0, 0, -7.2929688)
 
 [node name="model" parent="Plane" unique_id=470752549 instance=ExtResource("2_0xm2m")]
-transform = Transform3D(1.26, 0, 0, 0, 1.26, 0, 0, 0, 1.26, 0, -1.6009369, 0)
+transform = Transform3D(1.26, 0, 0, 0, 1.26, 0, 0, 0, 1.26, 0, -1.6009216, -3.50531)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Plane" unique_id=1505641200]
-transform = Transform3D(1, 0, 0, 0, 0.9876968, 0.15638097, 0, -0.15638097, 0.9876968, -0.76190186, -0.46310425, 0.5464506)
+transform = Transform3D(1, 0, 0, 0, 0.9876968, 0.15638097, 0, -0.15638097, 0.9876968, -0.76190186, -0.46310425, -2.9588623)
 shape = SubResource("BoxShape3D_s8a0o")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="Plane" unique_id=349414292]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.61205626, -1.3720703, 2.253934)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.61205626, -1.3720703, -1.2514038)
 shape = SubResource("SphereShape3D_k05f4")
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="Plane" unique_id=630470122]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6619525, -1.3720703, 2.253934)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6619525, -1.3720703, -1.2514038)
 shape = SubResource("SphereShape3D_k05f4")
 
-[node name="Camera3D" type="Camera3D" parent="Plane" unique_id=382258926]
-transform = Transform3D(-0.9999179, -0.004675371, 0.011929492, -0.004156914, 0.9990612, 0.04312076, -0.012119898, 0.043067634, -0.99899864, 0.008444786, 0.75845337, 0.9103279)
+[node name="cam_1" type="Camera3D" parent="Plane" unique_id=1955040209]
+transform = Transform3D(-1.9975607, 0.013061196, -0.097887754, -0.004878208, 1.9669595, 0.36199743, 0.09863472, 0.36179483, -1.9645294, -1.6011276, 7.166565, -19.661133)
+current = true
+
+[node name="cam_2" type="Camera3D" parent="Plane" unique_id=1250248387]
+transform = Transform3D(-2.0000005, 8.5557084e-10, 1.7484399e-07, -6.4469835e-10, 1.9999253, -0.017160868, -1.7484486e-07, -0.017160878, -1.9999263, 0.0029469447, 0.70983887, -2.5952148)
 
 [node name="Main scene" type="Node3D" parent="." unique_id=325302715]
 
 [node name="Generation controller" type="Node3D" parent="Main scene" unique_id=1772107324 node_paths=PackedStringArray("player", "ground_mesh_gen", "biome_generator", "ground_shader_controller", "objects_generator", "structure_gen")]
 transform = Transform3D(1.11, 0, 0, 0, 1.11, 0, 0, 0, 1.11, 0, 0, 0)
 script = ExtResource("3_qsp4k")
-terrain_chunk_size = 100
+terrain_chunk_size = 300
 biomes = [ExtResource("4_kq58d"), ExtResource("5_seu75"), ExtResource("6_htxhm"), ExtResource("7_jq2sk"), ExtResource("8_4k2k6"), ExtResource("9_0rl1p"), ExtResource("10_ok6jj")]
 max_main_thread_chunk_instantiation_per_frame = 1
-player = NodePath("../../Plane")
-view_distance_chunks = 5
+player = NodePath("../../DebugDraw3D")
+view_distance_chunks = 10
 chunk_prefab = ExtResource("11_facbu")
 ground_mesh_gen = NodePath("../ground mesh gen")
 biome_generator = NodePath("../biome generator")
@@ -498,7 +568,7 @@ slope_roughness_effect = 1.0
 [node name="ground mesh gen" type="Node" parent="Main scene" unique_id=1234028555 node_paths=PackedStringArray("terrain_aspects_solver")]
 script = ExtResource("27_abqjc")
 terrain_aspects_solver = NodePath("../terrain aspects solver")
-resolution = 50
+resolution = 60
 high_frequency_noise = SubResource("Resource_ghshe")
 medium_frequency_noise = SubResource("Resource_5smuj")
 low_frequency_noise = SubResource("Resource_kv3aw")
@@ -520,10 +590,47 @@ environment = SubResource("Environment_fv2he")
 camera_attributes = SubResource("CameraAttributesPractical_ak604")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Main scene" unique_id=424937987]
-transform = Transform3D(34.56, 0, 0, 0, 19.84, 0, 0, 0, 551.92, -6.465, 118.041, 0)
+transform = Transform3D(56.415, 0, 0, 0, 18.515, 0, 0, 0, 1283.295, -6.465, 245.84016, 0)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Main scene/StaticBody3D" unique_id=555297316]
 mesh = SubResource("BoxMesh_s8a0o")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Main scene/StaticBody3D" unique_id=2078665653]
 shape = SubResource("BoxShape3D_k05f4")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=546877744]
+
+[node name="AOA" type="Label" parent="CanvasLayer" unique_id=621965834]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -31.0
+offset_top = -23.0
+offset_right = 30.515015
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_qsp4k")
+text = "1deg"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Speed" type="Label" parent="CanvasLayer" unique_id=1948521304]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -31.0
+offset_top = -46.0
+offset_right = 30.52002
+offset_bottom = -23.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_qsp4k")
+text = "348km/h"
+horizontal_alignment = 1
+vertical_alignment = 2

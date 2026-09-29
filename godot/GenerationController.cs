@@ -29,7 +29,6 @@ public partial class GenerationController : Node
 
         public override void _Ready()
         {
-
                 if (!Engine.IsEditorHint())
                         RunClean();
         }

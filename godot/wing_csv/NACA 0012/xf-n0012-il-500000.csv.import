@@ -1,0 +1,16 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://bu1is3uua7ls1"
+
+[deps]
+
+source_file="res://wing_csv/NACA 0012/xf-n0012-il-500000.csv"
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

@@ -1,7 +1,7 @@
 use std::{fs::File, io::read_to_string};
 
 use anyhow::{Context, Result, bail, ensure};
-use godot::prelude::*;
+use godot::{classes::Engine, prelude::*};
 
 use crate::wing::AerodynamicData;
 
@@ -10,6 +10,8 @@ use crate::wing::AerodynamicData;
 pub struct CoefficientLU {
     #[export]
     initialized: bool,
+    #[export]
+    debug: bool,
 
     #[export]
     csv_files: Array<GString>,
@@ -170,6 +172,10 @@ impl CoefficientLU {
         Ok(())
     }
 
+    pub fn is_broken(&self) -> bool {
+        self.reynold_numbers.is_empty()
+    }
+
     pub fn init(&mut self) -> Result<()> {
         // Completely reset loaded data.
         self.aoa_values.clear();
@@ -213,24 +219,21 @@ impl CoefficientLU {
 
         let aoa_grid = &self.aoa_values[start..end];
 
-        let (low, high) = if aoa <= aoa_grid[0] {
-            // Extrapolate below the minimum AoA using the first two points.
-            (0, 1)
-        } else if aoa >= aoa_grid[aoa_grid.len() - 1] {
-            // Extrapolate above the maximum AoA using the last two points.
-            let high = aoa_grid.len() - 1;
-            (high - 1, high)
-        } else {
-            // Interpolate between the two surrounding points.
-            let high = aoa_grid.partition_point(|&value| value < aoa);
-            (high - 1, high)
-        };
+        // Clamp AoA to the polar's range instead of extrapolating.
+        // Extrapolating an airfoil polar can produce absurd coefficients
+        // (e.g. CL > 400) when the simulation briefly leaves the flight envelope.
+        let clamped_aoa = aoa.clamp(aoa_grid[0], aoa_grid[aoa_grid.len() - 1]);
+
+        let high = aoa_grid
+            .partition_point(|&value| value < clamped_aoa)
+            .min(aoa_grid.len() - 1)
+            .max(1);
+        let low = high - 1;
 
         let aoa_low = aoa_grid[low];
         let aoa_high = aoa_grid[high];
 
-        // This can be < 0 or > 1 when extrapolating.
-        let t = (aoa - aoa_low) / (aoa_high - aoa_low);
+        let t = (clamped_aoa - aoa_low) / (aoa_high - aoa_low);
 
         let low_idx = start + low;
         let high_idx = start + high;
@@ -245,12 +248,8 @@ impl CoefficientLU {
     }
 
     pub fn sample(&mut self, aoa: f32, reynold_number: u32) -> AerodynamicData {
-        if !self.initialized || self.reynold_numbers.is_empty() {
-            godot_print!(
-                "initialized reynolds numbers! if you see this info every frame, this means you need to add csv files to the airfoil data lu!"
-            );
+        if !self.initialized || (!Engine::singleton().is_editor_hint() && self.is_broken()) {
             self.initialized = true;
-
             if let Err(err) = self.init() {
                 godot_script_error!(
                     "while sampling aerodynamic data in \
@@ -263,6 +262,13 @@ impl CoefficientLU {
                     pitch: 0.0,
                 };
             }
+        }
+        if self.reynold_numbers.is_empty() {
+            return AerodynamicData {
+                lift: 0.,
+                drag: 0.,
+                pitch: 0.,
+            };
         }
 
         let reynolds = &self.reynold_numbers;
@@ -289,6 +295,16 @@ impl CoefficientLU {
         let low = self.sample_for_reynold_index(low_idx, aoa);
 
         let high = self.sample_for_reynold_index(high_idx, aoa);
+        if self.debug {
+            godot_print!(
+                "Coefficients: Reynolds-number:{reynold_number} aoa:{aoa}, output:{:?}",
+                AerodynamicData {
+                    lift: Self::interpolate(low.lift, high.lift, reynolds_t),
+                    drag: Self::interpolate(low.drag, high.drag, reynolds_t),
+                    pitch: Self::interpolate(low.pitch, high.pitch, reynolds_t),
+                }
+            )
+        }
 
         AerodynamicData {
             lift: Self::interpolate(low.lift, high.lift, reynolds_t),
