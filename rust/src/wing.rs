@@ -5,7 +5,7 @@ use godot::{
     prelude::*,
 };
 
-use crate::{air, coefficient_lu::CoefficientLU};
+use crate::coefficient_lu::CoefficientLU;
 
 #[derive(GodotClass)]
 #[class(tool,init,base=Resource)]
@@ -198,13 +198,17 @@ impl Wing {
         self.draw_arrow(b - up, d - up, color, self.debug_scale);
         self.draw_arrow(d - up, c - up, color, self.debug_scale);
     }
-    fn calc_reynold(&self, air_speed: f32) -> f32 {
-        (air_speed * self.mean_aerodynamic_chord())
-            / air::kinematic_air_density(self.base().get_global_position().y)
+    fn calc_reynold(&self, air_speed: f32, kinematic_viscosity: f32) -> f32 {
+        (air_speed * self.mean_aerodynamic_chord()) / kinematic_viscosity
     }
 
-    fn coefficients(&mut self, air_speed: f32, aoa: f32) -> AerodynamicData {
-        let reynolds = self.calc_reynold(air_speed).floor() as u32;
+    fn coefficients(
+        &mut self,
+        air_speed: f32,
+        aoa: f32,
+        kinematic_viscosity: f32,
+    ) -> AerodynamicData {
+        let reynolds = self.calc_reynold(air_speed, kinematic_viscosity).floor() as u32;
         let coefficient = self.coefficient_lu.bind_mut().sample(aoa, reynolds);
 
         AerodynamicData {
@@ -256,20 +260,21 @@ impl Wing {
         global_air_velocity: Vector3,
         aircraft_angular_velocity: Vector3,
         aircraft_center_of_mass_global_pos: Vector3,
+        air_density: f32,
+        kinematic_viscosity: f32,
     ) -> AerodynamicVectors {
         let basis = self.base().get_global_basis();
-        let origin = self.base().get_global_position();
-        let root_global = origin + basis * self.root_point;
-        let tip_global = origin + basis * self.tip_point;
-
         let global_pos = self.base().get_global_position();
+        let root_global = global_pos + basis * self.root_point;
+        let tip_global = global_pos + basis * self.tip_point;
 
         let span_dir = (tip_global - root_global).normalized_or_zero();
-        let chord_dir = (basis * Vector3::FORWARD
-            - span_dir * (basis * Vector3::FORWARD).dot(span_dir))
-        .normalized();
+        let forward_global = basis * Vector3::FORWARD;
+        let chord_dir =
+            (forward_global - span_dir * forward_global.dot(span_dir)).normalized();
+        let up_global = basis * Vector3::UP;
         let mut normal_dir = span_dir.cross(chord_dir).normalized();
-        if normal_dir.dot(basis * Vector3::UP) < 0.0 {
+        if normal_dir.dot(up_global) < 0.0 {
             normal_dir = -normal_dir;
         }
 
@@ -298,21 +303,18 @@ impl Wing {
         }
 
         let coefficients = {
-            // deg
-            let mut aoa = {
-                let velocity_normal = relative_air_velocity.dot(normal_dir);
-                let velocity_chord = relative_air_velocity.dot(chord_dir);
-                velocity_normal.atan2(velocity_chord).to_degrees()
-            };
+            let velocity_normal = relative_air_velocity.dot(normal_dir);
+            let velocity_chord = relative_air_velocity.dot(chord_dir);
+            let aoa = velocity_normal.atan2(velocity_chord).to_degrees();
             self.aoa = aoa;
 
-            self.coefficients(speed, aoa)
+            self.coefficients(speed, aoa, kinematic_viscosity)
         };
 
-        let q = 0.5 * air::air_density(global_pos.y) * speed * speed;
+        let q = 0.5 * air_density * speed * speed;
         let lift = lift_dir * wing_area * q * coefficients.lift;
         let drag = relative_air_velocity.normalized_or_zero() * wing_area * q * coefficients.drag;
-        let torque = self.base().get_global_basis().col_a()
+        let torque = basis.col_a()
             * self.mean_aerodynamic_chord()
             * wing_area
             * q
@@ -328,15 +330,18 @@ impl Wing {
 
     pub fn draw_debug_arrows(
         &mut self,
-
         global_air_velocity: Vector3,
         aircraft_angular_velocity: Vector3,
         aircraft_center_of_gravity_global_pos: Vector3,
+        air_density: f32,
+        kinematic_viscosity: f32,
     ) {
         let vectors = self.calculate_aerodynamic_vectors(
             global_air_velocity,
             aircraft_angular_velocity,
             aircraft_center_of_gravity_global_pos,
+            air_density,
+            kinematic_viscosity,
         );
         self.draw_debug_visuals(&vectors, global_air_velocity);
     }

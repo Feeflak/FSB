@@ -45,6 +45,14 @@ pub(crate) struct Plane {
 
     // Reused between physics_process and process for debug drawing.
     last_wing_effects: Vec<WingEffect>,
+
+    // Throttling the aerodynamics loop saves a lot of CPU. Forces are still
+    // applied every physics frame, but only recomputed at this rate.
+    #[export]
+    #[init(val = 60.0)]
+    aero_update_rate: f32,
+    aero_timer: f32,
+    cached_aero_effects: Vec<WingEffect>,
 }
 pub struct UIInfo {
     pub velocity_kmh: u32,
@@ -150,8 +158,7 @@ impl Plane {
     fn update_cached_mass_stats(&mut self, delta: f32) -> MassStats {
         self.mass_stats_timer += delta;
         let rate = self.mass_stats_update_rate.max(0.001);
-        let should_update =
-            self.cached_mass_stats.is_none() || self.mass_stats_timer > 1.0 / rate;
+        let should_update = self.cached_mass_stats.is_none() || self.mass_stats_timer > 1.0 / rate;
         if should_update {
             self.mass_stats_timer = 0.0;
             self.cached_mass_stats = Some(self.mass_stats());
@@ -231,6 +238,7 @@ impl Plane {
             .set("frontalAirVelocity", &velocity.to_variant());
     }
 }
+#[derive(Clone)]
 struct WingEffect {
     pub force: Vector3,
     pub torque: Vector3,
@@ -242,10 +250,12 @@ struct WingEffect {
 #[godot_api]
 impl IRigidBody3D for Plane {
     fn process(&mut self, _delta: f64) {
+        let is_editor = Engine::singleton().is_editor_hint();
+
         // In the editor refresh mass stats every frame so the inspector edits
         // are reflected immediately. At runtime they are updated in
         // physics_process at a much lower rate.
-        if Engine::singleton().is_editor_hint() {
+        if is_editor {
             let stats = self.mass_stats();
             self.set_mass_stats_on_rigid_body(&stats);
             self.cached_mass_stats = Some(stats);
@@ -253,16 +263,16 @@ impl IRigidBody3D for Plane {
             self.cached_mass_stats = Some(self.mass_stats());
         }
 
+        let base_pos = self.base().get_global_position();
+        let base_basis = self.base().get_global_basis();
         let mass_stats = self.cached_mass_stats.clone().unwrap();
-        let com_global = self.base().get_global_position()
-            + self.base().get_global_basis() * mass_stats.local_com;
-
-        self.draw_sphere(com_global, 0.1, Color::GOLD);
-        self.draw_sphere(com_global, 0.1, Color::GOLD);
-        self.draw_sphere(com_global, 0.5, Color::GOLD);
+        let com_global = base_pos + base_basis * mass_stats.local_com;
 
         let air_speed = self.base().get_linear_velocity();
         if self.show_debug {
+            self.draw_sphere(com_global, 0.1, Color::GOLD);
+            self.draw_sphere(com_global, 0.1, Color::GOLD);
+            self.draw_sphere(com_global, 0.5, Color::GOLD);
             for (mut wing, effect) in self.wings.iter_shared().zip(self.last_wing_effects.iter()) {
                 let vectors = crate::wing::AerodynamicVectors {
                     force: effect.force,
@@ -276,69 +286,81 @@ impl IRigidBody3D for Plane {
     }
 
     fn physics_process(&mut self, _delta: f64) {
+        let is_editor = Engine::singleton().is_editor_hint();
+        let delta_f = _delta as f32;
+
         self.set_drivetrain_properties();
         let air_speed = self.base().get_linear_velocity();
-        self.speed_sample_timer += _delta as f32;
+        self.speed_sample_timer += delta_f;
 
         if self.speed_sample_timer > 1. / self.speed_sample_rate {
             self.speed_sample_timer = 0.;
             self.last_speed = air_speed;
         }
 
-        let mass_stats = self.update_cached_mass_stats(_delta as f32);
-        if !Engine::singleton().is_editor_hint() {
+        // Cache body transform and air properties once per frame. All wings
+        // share roughly the same altitude, so one density/viscosity sample is
+        // enough and avoids per-wing exponential/log calls.
+        let base_pos = self.base().get_global_position();
+        let base_basis = self.base().get_global_basis();
+        let air_density = air::air_density(base_pos.y);
+        let kinematic_viscosity = air::kinematic_air_density(base_pos.y);
+
+        let mass_stats = self.update_cached_mass_stats(delta_f);
+        if !is_editor {
             self.set_mass_stats_on_rigid_body(&mass_stats);
         }
 
-        // Aerodynamics needs a fresh global COM every frame. The local COM is
-        // cached (it only changes with mass distribution), so transform it with
-        // the current body basis instead of iterating all wings again.
-        let current_com_global = self.base().get_global_position()
-            + self.base().get_global_basis() * mass_stats.local_com;
+        // Fresh global COM from cached local COM + current body transform.
+        let current_com_global = base_pos + base_basis * mass_stats.local_com;
 
-        let mut effects = Vec::with_capacity(self.wings.len());
-        let mut total_aero_force = Vector3::ZERO;
-        let mut total_aero_torque = Vector3::ZERO;
-        let base_pos = self.base().get_global_position();
-        let angular_velocity = self.base().get_angular_velocity();
+        self.aero_timer += delta_f;
+        let aero_rate = self.aero_update_rate.max(0.001);
+        let recompute_aero = self.aero_timer >= 1.0 / aero_rate;
+        if recompute_aero {
+            self.aero_timer = 0.0;
+            self.cached_aero_effects.clear();
+            self.cached_aero_effects.reserve(self.wings.len());
 
-        for mut wing in self.wings.iter_shared() {
-            let mut wing_bind = wing.bind_mut();
-            wing_bind.update_flaps_effect();
-            let aero_vectors = wing_bind.calculate_aerodynamic_vectors(
-                air_speed,
-                angular_velocity,
-                current_com_global,
-            );
-            let pos = wing_bind.base().get_global_position() - base_pos;
-            effects.push(WingEffect {
-                force: aero_vectors.force,
-                torque: aero_vectors.torque,
-                lift: aero_vectors.lift,
-                drag: aero_vectors.drag,
-                pos,
-            });
-            total_aero_force += aero_vectors.force;
-            total_aero_torque += aero_vectors.torque;
+            let angular_velocity = self.base().get_angular_velocity();
+            for mut wing in self.wings.iter_shared() {
+                let mut wing_bind = wing.bind_mut();
+                wing_bind.update_flaps_effect();
+                let aero_vectors = wing_bind.calculate_aerodynamic_vectors(
+                    air_speed,
+                    angular_velocity,
+                    current_com_global,
+                    air_density,
+                    kinematic_viscosity,
+                );
+                let pos = wing_bind.base().get_global_position() - base_pos;
+                self.cached_aero_effects.push(WingEffect {
+                    force: aero_vectors.force,
+                    torque: aero_vectors.torque,
+                    lift: aero_vectors.lift,
+                    drag: aero_vectors.drag,
+                    pos,
+                });
+            }
         }
 
         let input = Input::singleton();
         let thrust = self.thrust
-            * if Engine::singleton().is_editor_hint() {
+            * if is_editor {
                 0.
             } else {
                 input.get_action_strength("throttle")
             };
 
         self.draw_arrow(
-            self.base().get_global_position(),
-            self.base().get_global_position()
-                + self.base().get_basis().col_c().normalized_or_zero() * self.thrust,
+            base_pos,
+            base_pos + base_basis.col_c().normalized_or_zero() * self.thrust,
             Color::MAGENTA,
             1.,
         );
-        let thrust_vector = self.base().get_global_basis().col_c().normalized_or_zero() * thrust;
+        let thrust_vector = base_basis.col_c().normalized_or_zero() * thrust;
 
+        let effects = self.cached_aero_effects.clone();
         let mut rb = self.base_mut();
         rb.apply_force(thrust_vector);
 

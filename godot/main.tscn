@@ -2674,6 +2674,9 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 
 [sub_resource type="FontFile" id="FontFile_gngh3"]
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
 cache/0/variation_coordinates = {}
 cache/0/face_index = 0
 cache/0/embolden = 0.0
@@ -3003,7 +3006,6 @@ metadata/_edit_vertical_guides_ = [327.0]
 [node name="DebugDraw3D" parent="." unique_id=1243779255 instance=ExtResource("1_ig7tw")]
 process_priority = 100000
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
-debug_visible = false
 line_width = 25.8
 
 [node name="Plane" type="Plane" parent="." unique_id=309672855 node_paths=PackedStringArray("drive_train", "aoa_label_wing", "wings", "debug_draw_3d")]
@@ -3012,14 +3014,14 @@ speed_sample_rate = 0.1
 last_speed = Vector3(0, -1.81, 96.89)
 aoa_label_wing = NodePath("FR")
 wings = [NodePath("FR"), NodePath("FL"), NodePath("BL"), NodePath("BU"), NodePath("BR"), NodePath("Chassis"), NodePath("FlapFR"), NodePath("FlapFL"), NodePath("FlapBL"), NodePath("FlapBR")]
-show_debug = true
 debug_draw_3d = NodePath("../DebugDraw3D")
+aero_update_rate = 1000.0
 transform = Transform3D(0.9999997, 0, 0, 0, 1.0000006, 0, 0, 0, 0.99999994, 36.11, 872.425, -5254.567)
 mass = 2230.0
 physics_material_override = SubResource("PhysicsMaterial_qsp4k")
 center_of_mass_mode = 1
-center_of_mass = Vector3(0.15964112, -0.039845265, -1.8863645)
-inertia = Vector3(10971.774, 14860.072, 3949.6997)
+center_of_mass = Vector3(0.15964112, -0.039845265, -2.483469)
+inertia = Vector3(10183.5, 14071.797, 3949.6997)
 linear_velocity = Vector3(0, -1.81, 96.89)
 angular_damp = 2.268
 
@@ -3097,7 +3099,7 @@ mesh = SubResource("ArrayMesh_61mfd")
 dry_mass = 1800.0
 max_fuel_mass = 500.0
 debug_airfoil_height = 1.875
-center_of_mass_offset = Vector3(0, 0, 1.36)
+center_of_mass_offset = Vector3(0, 0, 0.62)
 root_point = Vector3(0.8, 0, 0)
 root_chord = 7.0
 tip_point = Vector3(-0.405, 0, 0)
@@ -4025,7 +4027,7 @@ offset_top = -1.0
 offset_right = 41.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "61"
+text = "60"
 
 [node name="Label" type="Label" parent="Plane/CanvasLayer/hud/static/VBoxContainer/fps/fps" unique_id=284552629]
 layout_mode = 0
@@ -4344,7 +4346,7 @@ script = ExtResource("19_qnost")
 hubRadius = 0.1
 bladeElements = 20
 blades = 3
-bladeLength = 1.0
+bladeLength = 0.7
 chordBasedOnDistanceFromBeginningOfBlade = SubResource("Curve_0n3wm")
 bladeAngleBasedOnDistanceFromBeginningOfBladeRad = SubResource("Curve_qnost")
 dragBasedOnAoA = SubResource("Curve_wnkbs")

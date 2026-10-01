@@ -25,8 +25,8 @@ public partial class EngineSoundController : Node
 
                 player.PitchScale = Mathf.Max(.001f, combustionHz / 100f);
 
-                int bus = AudioServer.GetBusIndex("Engine");
-                AudioServer.SetBusMute(bus, rpm < 100);
+                // int bus = AudioServer.GetBusIndex("Engine");
+                // AudioServer.SetBusMute(bus, rpm < 100);
 
                 base._Process(delta);
         }
