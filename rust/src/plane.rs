@@ -34,6 +34,17 @@ pub(crate) struct Plane {
 
     #[export]
     debug_draw_3d: OnEditor<Gd<Node3D>>,
+
+    // Cached to avoid recomputing every physics frame. Mass/inertia change
+    // slowly (mostly fuel burn), so we refresh at a low fixed rate.
+    #[export]
+    #[init(val = 1.0)]
+    mass_stats_update_rate: f32,
+    mass_stats_timer: f32,
+    cached_mass_stats: Option<MassStats>,
+
+    // Reused between physics_process and process for debug drawing.
+    last_wing_effects: Vec<WingEffect>,
 }
 pub struct UIInfo {
     pub velocity_kmh: u32,
@@ -42,15 +53,20 @@ pub struct UIInfo {
     pub mach: f32,
     pub g: f32,
 }
+#[derive(Clone)]
 struct MassStats {
     pub inertia: Vector3,
     pub total_mass: f32,
-    pub global_com: Vector3,
+    /// Center of mass in the plane's local space. Cached because it only
+    /// changes with fuel/mass distribution, but transform it with the current
+    /// body basis each frame to get a fresh global COM.
+    pub local_com: Vector3,
 }
 impl Plane {
-    fn total_inertia(&self, global_com: Vector3) -> Vector3 {
+    fn total_inertia(&self, local_com: Vector3) -> Vector3 {
         let body_basis = self.base().get_global_basis();
         let body_basis_inv = body_basis.inverse();
+        let body_pos = self.base().get_global_position();
         let mut total_inertia = Vector3::ZERO;
         for wing_gd in self.wings.iter_shared() {
             let wing = wing_gd.bind();
@@ -61,7 +77,8 @@ impl Plane {
             let wing_com_local = wing.center_of_mass_local();
             let global_wing_com =
                 wing_gd.get_global_position() + wing_gd.get_global_basis() * wing_com_local;
-            let body_wing_com = body_basis_inv * (global_wing_com - global_com);
+            let local_wing_com = body_basis_inv * (global_wing_com - body_pos);
+            let body_wing_com = local_wing_com - local_com;
             let wing_local_inertia = wing.inertia_about_com();
             let span_local = (wing.tip_point - wing.root_point).normalized_or_zero();
             let chord_ref_local = Vector3::FORWARD;
@@ -99,26 +116,47 @@ impl Plane {
         total_inertia
     }
     fn mass_stats(&self) -> MassStats {
+        let body_basis = self.base().get_global_basis();
+        let body_basis_inv = body_basis.inverse();
+        let body_pos = self.base().get_global_position();
+
         let mut vector_sum = Vector3::ZERO;
         let mut total_mass = 0.;
         for wing_gd in self.wings.iter_shared() {
             let wing = wing_gd.bind();
             let mass = wing.total_mass();
+            if mass == 0.0 {
+                continue;
+            }
             total_mass += mass;
             let global_wing_com = wing_gd.get_global_position()
                 + wing_gd.get_global_basis() * wing.center_of_mass_local();
-            vector_sum += (global_wing_com) * mass;
+            let local_wing_com = body_basis_inv * (global_wing_com - body_pos);
+            vector_sum += local_wing_com * mass;
         }
-        let global_com = if total_mass > 0.0 {
+        let local_com = if total_mass > 0.0 {
             vector_sum / total_mass
         } else {
-            self.base().get_global_position()
+            Vector3::ZERO
         };
+
         MassStats {
-            inertia: self.total_inertia(global_com),
-            global_com,
+            inertia: self.total_inertia(local_com),
             total_mass,
+            local_com,
         }
+    }
+
+    fn update_cached_mass_stats(&mut self, delta: f32) -> MassStats {
+        self.mass_stats_timer += delta;
+        let rate = self.mass_stats_update_rate.max(0.001);
+        let should_update =
+            self.cached_mass_stats.is_none() || self.mass_stats_timer > 1.0 / rate;
+        if should_update {
+            self.mass_stats_timer = 0.0;
+            self.cached_mass_stats = Some(self.mass_stats());
+        }
+        self.cached_mass_stats.clone().unwrap()
     }
     fn draw_arrow(&mut self, a: Vector3, b: Vector3, col: Color, size: f32) {
         self.debug_draw_3d.call(
@@ -132,17 +170,10 @@ impl Plane {
         );
     }
 
-    fn set_mass_stats_on_rigid_body(&mut self) {
-        let mass_stats = self.mass_stats();
-        let global_pos = self.base().get_global_position();
-
+    fn set_mass_stats_on_rigid_body(&mut self, mass_stats: &MassStats) {
         self.base_mut().set_mass(mass_stats.total_mass);
         self.base_mut().set_inertia(mass_stats.inertia);
-        {
-            let local_com =
-                self.base().get_global_basis().inverse() * (mass_stats.global_com - global_pos);
-            self.base_mut().set_center_of_mass(local_com);
-        }
+        self.base_mut().set_center_of_mass(mass_stats.local_com);
     }
     fn draw_sphere(&mut self, pos: Vector3, radious: f32, color: Color) {
         self.debug_draw_3d.call(
@@ -203,42 +234,43 @@ impl Plane {
 struct WingEffect {
     pub force: Vector3,
     pub torque: Vector3,
+    pub lift: Vector3,
+    pub drag: Vector3,
     pub pos: Vector3,
 }
 
 #[godot_api]
 impl IRigidBody3D for Plane {
     fn process(&mut self, _delta: f64) {
+        // In the editor refresh mass stats every frame so the inspector edits
+        // are reflected immediately. At runtime they are updated in
+        // physics_process at a much lower rate.
         if Engine::singleton().is_editor_hint() {
-            self.set_mass_stats_on_rigid_body();
+            let stats = self.mass_stats();
+            self.set_mass_stats_on_rigid_body(&stats);
+            self.cached_mass_stats = Some(stats);
+        } else if self.cached_mass_stats.is_none() {
+            self.cached_mass_stats = Some(self.mass_stats());
         }
 
-        self.draw_sphere(
-            self.base().get_global_position()
-                + self.base().get_global_basis() * self.base().get_center_of_mass(),
-            0.1,
-            Color::GOLD,
-        );
-        self.draw_sphere(
-            self.base().get_global_position()
-                + self.base().get_global_basis() * self.base().get_center_of_mass(),
-            0.1,
-            Color::GOLD,
-        );
+        let mass_stats = self.cached_mass_stats.clone().unwrap();
+        let com_global = self.base().get_global_position()
+            + self.base().get_global_basis() * mass_stats.local_com;
 
-        self.draw_sphere(
-            self.base().get_global_position()
-                + self.base().get_global_basis() * self.base().get_center_of_mass(),
-            0.5,
-            Color::GOLD,
-        );
+        self.draw_sphere(com_global, 0.1, Color::GOLD);
+        self.draw_sphere(com_global, 0.1, Color::GOLD);
+        self.draw_sphere(com_global, 0.5, Color::GOLD);
+
         let air_speed = self.base().get_linear_velocity();
-        let angular_velocity = self.base().get_angular_velocity();
-        let com = self.base().get_global_position() + self.base().get_center_of_mass();
         if self.show_debug {
-            for mut wing in self.wings.iter_shared() {
-                wing.bind_mut()
-                    .draw_debug_arrows(air_speed, angular_velocity, com);
+            for (mut wing, effect) in self.wings.iter_shared().zip(self.last_wing_effects.iter()) {
+                let vectors = crate::wing::AerodynamicVectors {
+                    force: effect.force,
+                    torque: effect.torque,
+                    lift: effect.lift,
+                    drag: effect.drag,
+                };
+                wing.bind_mut().draw_debug_visuals(&vectors, air_speed);
             }
         }
     }
@@ -253,7 +285,16 @@ impl IRigidBody3D for Plane {
             self.last_speed = air_speed;
         }
 
-        self.set_mass_stats_on_rigid_body();
+        let mass_stats = self.update_cached_mass_stats(_delta as f32);
+        if !Engine::singleton().is_editor_hint() {
+            self.set_mass_stats_on_rigid_body(&mass_stats);
+        }
+
+        // Aerodynamics needs a fresh global COM every frame. The local COM is
+        // cached (it only changes with mass distribution), so transform it with
+        // the current body basis instead of iterating all wings again.
+        let current_com_global = self.base().get_global_position()
+            + self.base().get_global_basis() * mass_stats.local_com;
 
         let mut effects = Vec::with_capacity(self.wings.len());
         let mut total_aero_force = Vector3::ZERO;
@@ -261,19 +302,21 @@ impl IRigidBody3D for Plane {
         let base_pos = self.base().get_global_position();
         let angular_velocity = self.base().get_angular_velocity();
 
-        let mass_stats = self.mass_stats();
-
         for mut wing in self.wings.iter_shared() {
-            wing.bind_mut().update_flaps_effect();
-            let aero_vectors = wing.bind_mut().calculate_aerodynamic_vectors(
+            let mut wing_bind = wing.bind_mut();
+            wing_bind.update_flaps_effect();
+            let aero_vectors = wing_bind.calculate_aerodynamic_vectors(
                 air_speed,
                 angular_velocity,
-                mass_stats.global_com,
+                current_com_global,
             );
+            let pos = wing_bind.base().get_global_position() - base_pos;
             effects.push(WingEffect {
                 force: aero_vectors.force,
                 torque: aero_vectors.torque,
-                pos: wing.get_global_position() - base_pos,
+                lift: aero_vectors.lift,
+                drag: aero_vectors.drag,
+                pos,
             });
             total_aero_force += aero_vectors.force;
             total_aero_torque += aero_vectors.torque;
@@ -299,9 +342,12 @@ impl IRigidBody3D for Plane {
         let mut rb = self.base_mut();
         rb.apply_force(thrust_vector);
 
-        for effect in effects {
+        for effect in &effects {
             rb.apply_force_ex(effect.force).position(effect.pos).done();
             rb.apply_torque(effect.torque);
         }
+        drop(rb);
+
+        self.last_wing_effects = effects;
     }
 }

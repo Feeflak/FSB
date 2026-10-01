@@ -149,11 +149,11 @@ shadow_mesh = SubResource("ArrayMesh_v5646")
 
 [sub_resource type="Flap" id="Flap_rnkwl"]
 action_name_to_respond = "roll_right"
-rotation = 10.0
+rotation = 12.0
 
 [sub_resource type="Flap" id="Flap_vke2r"]
 action_name_to_respond = "roll_left"
-rotation = -10.0
+rotation = -12.0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_0wxku"]
 _surfaces = [{
@@ -191,11 +191,11 @@ shadow_mesh = SubResource("ArrayMesh_0wxku")
 
 [sub_resource type="Flap" id="Flap_uit24"]
 action_name_to_respond = "roll_right"
-rotation = -10.0
+rotation = -12.0
 
 [sub_resource type="Flap" id="Flap_ruth0"]
 action_name_to_respond = "roll_left"
-rotation = 10.0
+rotation = 12.0
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_nunnd"]
 _surfaces = [{
@@ -237,11 +237,11 @@ csv_files = Array[String](["wing_csv/F4F Wildcat Chassis/xf-f4f-wildcat-chassis-
 
 [sub_resource type="Flap" id="Flap_4w656"]
 action_name_to_respond = "yaw_left"
-rotation = 8.0
+rotation = 12.0
 
 [sub_resource type="Flap" id="Flap_e71vb"]
 action_name_to_respond = "yaw_right"
-rotation = -8.0
+rotation = -12.0
 
 [sub_resource type="CoefficientLU" id="CoefficientLU_qsp4k"]
 initialized = true
@@ -3012,13 +3012,14 @@ speed_sample_rate = 0.1
 last_speed = Vector3(0, -1.81, 96.89)
 aoa_label_wing = NodePath("FR")
 wings = [NodePath("FR"), NodePath("FL"), NodePath("BL"), NodePath("BU"), NodePath("BR"), NodePath("Chassis"), NodePath("FlapFR"), NodePath("FlapFL"), NodePath("FlapBL"), NodePath("FlapBR")]
+show_debug = true
 debug_draw_3d = NodePath("../DebugDraw3D")
 transform = Transform3D(0.9999997, 0, 0, 0, 1.0000006, 0, 0, 0, 0.99999994, 36.11, 872.425, -5254.567)
 mass = 2230.0
 physics_material_override = SubResource("PhysicsMaterial_qsp4k")
 center_of_mass_mode = 1
-center_of_mass = Vector3(0.15964133, -0.03985594, -1.8862307)
-inertia = Vector3(10971.774, 14860.072, 3949.6992)
+center_of_mass = Vector3(0.15964112, -0.039845265, -1.8863645)
+inertia = Vector3(10971.774, 14860.072, 3949.6997)
 linear_velocity = Vector3(0, -1.81, 96.89)
 angular_damp = 2.268
 
@@ -3028,9 +3029,9 @@ flaps = Array[Flap]([SubResource("Flap_seu75"), SubResource("Flap_htxhm")])
 trims = Array[Trim]([SubResource("Trim_seu75")])
 debug_airfoil_height = 0.215
 root_point = Vector3(0.815, 0, -0.21)
-root_chord = 0.535
-tip_point = Vector3(-1.185, 0, -0.275)
-tip_chord = 0.625
+root_chord = 1.045
+tip_point = Vector3(-1.865, 0, -0.275)
+tip_chord = 1.135
 debug_scale = 4.21
 coefficient_lu = SubResource("CoefficientLU_waj2o")
 debug_draw_3d = NodePath("../../DebugDraw3D")
@@ -3046,9 +3047,9 @@ flaps = Array[Flap]([SubResource("Flap_seu75"), SubResource("Flap_htxhm")])
 trims = Array[Trim]([SubResource("Trim_seu75")])
 debug_airfoil_height = 0.215
 root_point = Vector3(0.755, 0, -0.32)
-root_chord = 0.67
+root_chord = 1.14
 tip_point = Vector3(-1.185, 0, -0.18)
-tip_chord = 0.37
+tip_chord = 1.12
 debug_scale = 4.21
 coefficient_lu = SubResource("CoefficientLU_waj2o")
 debug_draw_3d = NodePath("../../DebugDraw3D")
@@ -3062,10 +3063,10 @@ mesh = SubResource("ArrayMesh_e8bxm")
 rotation_direction_from_flaps = Vector3(-1, 0, 0)
 flaps = Array[Flap]([SubResource("Flap_rnkwl"), SubResource("Flap_vke2r")])
 debug_airfoil_height = 0.215
-root_point = Vector3(1.54, 0, -0.025)
-root_chord = 0.535
-tip_point = Vector3(-1.185, 0, -0.41)
-tip_chord = 0.38
+root_point = Vector3(3.9, 0, 0.495)
+root_chord = 0.785
+tip_point = Vector3(-1.53, 0, -0.28)
+tip_chord = 0.71
 debug_scale = 4.21
 coefficient_lu = SubResource("CoefficientLU_waj2o")
 debug_draw_3d = NodePath("../../DebugDraw3D")
@@ -3079,10 +3080,10 @@ mesh = SubResource("ArrayMesh_gunla")
 rotation_direction_from_flaps = Vector3(-1, 0, 0)
 flaps = Array[Flap]([SubResource("Flap_uit24"), SubResource("Flap_ruth0")])
 debug_airfoil_height = 0.215
-root_point = Vector3(0.43, 0, -0.445)
-root_chord = 0.535
-tip_point = Vector3(-2.045, 0, -0.195)
-tip_chord = 0.38
+root_point = Vector3(1.035, 0, -0.445)
+root_chord = 0.71
+tip_point = Vector3(-4.74, 0, 0.135)
+tip_chord = 0.545
 debug_scale = 4.21
 coefficient_lu = SubResource("CoefficientLU_waj2o")
 debug_draw_3d = NodePath("../../DebugDraw3D")
@@ -4024,7 +4025,7 @@ offset_top = -1.0
 offset_right = 41.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "25"
+text = "61"
 
 [node name="Label" type="Label" parent="Plane/CanvasLayer/hud/static/VBoxContainer/fps/fps" unique_id=284552629]
 layout_mode = 0

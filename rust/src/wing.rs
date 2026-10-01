@@ -338,6 +338,10 @@ impl Wing {
             aircraft_angular_velocity,
             aircraft_center_of_gravity_global_pos,
         );
+        self.draw_debug_visuals(&vectors, global_air_velocity);
+    }
+
+    pub fn draw_debug_visuals(&mut self, vectors: &AerodynamicVectors, global_air_velocity: Vector3) {
         self.draw_your_shape();
         let base_transform = self.base().get_global_transform();
 
