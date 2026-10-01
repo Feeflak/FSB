@@ -1,0 +1,160 @@
+[gd_scene load_steps=14 format=3 uid="uid://ckvdm2kftbv23"]
+
+[ext_resource type="Script" uid="uid://bhxqolxkj58ts" path="res://Charts/Data/GraphMain.cs" id="1_ibtor"]
+[ext_resource type="PackedScene" uid="uid://eej5ylbayrrt" path="res://Charts/point.tscn" id="2_ij67p"]
+[ext_resource type="Script" uid="uid://bh2mk50gxsl62" path="res://Charts/Data/DataGroup.cs" id="3_jqe2t"]
+[ext_resource type="PackedScene" uid="uid://bpuk6au2h52yi" path="res://Charts/Data/data_group_visualization.tscn" id="4_4043i"]
+[ext_resource type="Script" uid="uid://bv621fm8vmq0g" path="res://Charts/Data/Value lines/ValueLineManager.cs" id="5_ikj8p"]
+[ext_resource type="Script" uid="uid://5su6n68oclvr" path="res://Charts/Data/Value lines/ValueLineDirection.cs" id="6_6kwmf"]
+[ext_resource type="PackedScene" uid="uid://crixpc01ettlj" path="res://Charts/Data/Value lines/horizontal.tscn" id="7_j7kcm"]
+[ext_resource type="PackedScene" uid="uid://bggpkjssbhblb" path="res://Charts/Data/Value lines/horizontal_end.tscn" id="8_psh7t"]
+[ext_resource type="PackedScene" uid="uid://c1hyxh5gew8g7" path="res://Charts/Data/Value lines/vertical.tscn" id="9_psnmr"]
+[ext_resource type="PackedScene" uid="uid://bydyati2wplx3" path="res://Charts/Data/Value lines/veritcal_end.tscn" id="10_5uwiu"]
+
+[sub_resource type="Resource" id="Resource_b6mq7"]
+script = ExtResource("3_jqe2t")
+color = Color(1, 0, 0, 1)
+name = "Horse power"
+averagePoolSize = 2
+metadata/_custom_type_script = "uid://bh2mk50gxsl62"
+
+[sub_resource type="Resource" id="Resource_0y8es"]
+script = ExtResource("3_jqe2t")
+color = Color(0, 0, 1, 1)
+name = "Torque N"
+averagePoolSize = 4
+metadata/_custom_type_script = "uid://bh2mk50gxsl62"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n8ltk"]
+bg_color = Color(0.169245, 0.169245, 0.169245, 1)
+
+[node name="Graph scene" type="Control" node_paths=PackedStringArray("valueLineManager", "pointsParent", "valueNameLabel", "domainNameLabel", "dataGroupVisualizationLayout")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ibtor")
+valueLineManager = NodePath("Padding/Value line manager")
+pointPrefab = ExtResource("2_ij67p")
+pointsParent = NodePath("Padding/PointsParent")
+valueRange = Vector2(-10, 10)
+domainRange = Vector2(0, 10)
+valueName = "Horse power"
+domainName = "time"
+valueNameLabel = NodePath("value name")
+domainNameLabel = NodePath("domain name")
+pointsCount = 1000
+dataGroups = [SubResource("Resource_b6mq7"), SubResource("Resource_0y8es")]
+dataGroupVisualizationLayout = NodePath("Data groups layout")
+dataGroupVisualizationpPrefab = ExtResource("4_4043i")
+pointsScale = 5.0
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_n8ltk")
+
+[node name="value name" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = 126.0
+offset_right = 219.0
+offset_bottom = 166.0
+grow_vertical = 2
+rotation = -1.5708
+theme_override_font_sizes/font_size = 25
+text = "Horse power"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="domain name" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -109.5
+offset_top = -40.0
+offset_right = 109.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 25
+text = "time"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Padding" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 100.0
+offset_top = 100.0
+offset_right = -100.0
+offset_bottom = -100.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PointsParent" type="Control" parent="Padding"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Value line manager" type="Node" parent="Padding" node_paths=PackedStringArray("horizontal", "vertical", "main")]
+script = ExtResource("5_ikj8p")
+horizontal = NodePath("../Horizontal direction")
+vertical = NodePath("../Vertical direciton")
+main = NodePath("../..")
+lineThickness = 1.0
+
+[node name="Horizontal direction" type="Node" parent="Padding" node_paths=PackedStringArray("layout")]
+script = ExtResource("6_6kwmf")
+layout = NodePath("../Horizontal")
+line = ExtResource("7_j7kcm")
+endLine = ExtResource("8_psh7t")
+linesCount = 10
+
+[node name="Horizontal" type="HBoxContainer" parent="Padding"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+alignment = 2
+
+[node name="Vertical direciton" type="Node" parent="Padding" node_paths=PackedStringArray("layout")]
+script = ExtResource("6_6kwmf")
+layout = NodePath("../Vertical")
+line = ExtResource("9_psnmr")
+endLine = ExtResource("10_5uwiu")
+linesCount = 10
+
+[node name="Vertical" type="VBoxContainer" parent="Padding"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Data groups layout" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 14.0
+offset_right = 54.0
+offset_bottom = 54.0

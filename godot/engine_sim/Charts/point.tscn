@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://eej5ylbayrrt"]
+
+[ext_resource type="Texture2D" uid="uid://b6ckialoxvkfv" path="res://Charts/Data/Sprites/circle.png" id="1_gawjq"]
+
+[node name="Point" type="TextureRect"]
+offset_right = 50.0
+offset_bottom = 50.0
+texture = ExtResource("1_gawjq")
+expand_mode = 2

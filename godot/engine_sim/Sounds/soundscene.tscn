@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://dsg5g4ti0n3gt"]
+
+[ext_resource type="Script" uid="uid://w5adw34732eb" path="res://Sounds/NoiseAndSin.cs" id="1_4hc11"]
+[ext_resource type="Script" uid="uid://eh14vxcq50fm" path="res://Sounds/EngineSoundController.cs" id="4_787sv"]
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_xfmxv"]
+
+[node name="Scene" type="Node3D"]
+
+[node name="Engine synth" type="Node" parent="." node_paths=PackedStringArray("Player")]
+script = ExtResource("1_4hc11")
+Player = NodePath("AudioStreamPlayer")
+culindersCount = 4
+cylindersOffset = 1911.78
+frequency = 100.0
+amplitude = 4.05
+dutyCycle = 0.35
+Duration = 0.1
+NoiseVolume = 1.0
+distortion = false
+DistortionAmount = 2.755
+FeedbackAmount = 1.5
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Engine synth"]
+stream = SubResource("AudioStreamGenerator_xfmxv")
+pitch_scale = 0.001
+mix_target = 2
+max_polyphony = 3
+bus = &"Engine"
+
+[node name="Node" type="Node" parent="Engine synth"]
+
+[node name="Engine controller" type="Node" parent="." node_paths=PackedStringArray("player")]
+script = ExtResource("4_787sv")
+player = NodePath("../Engine synth/AudioStreamPlayer")

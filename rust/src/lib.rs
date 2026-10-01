@@ -2,6 +2,7 @@ pub mod wing;
 pub mod coefficient_lu;
 pub mod air;
 pub mod plane;
+pub mod cam;
 
 use godot::prelude::*;
 

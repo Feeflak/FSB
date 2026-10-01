@@ -1,10 +1,29 @@
-// TODO: BETTER FLAPS, MASS && COM && INERTIA CALCULATIONS
+use std::f32::consts::PI;
+
 use godot::{
-    classes::{Engine, Input},
+    classes::{Engine, IRigidBody3D, Input},
     prelude::*,
 };
 
 use crate::{air, coefficient_lu::CoefficientLU};
+
+#[derive(GodotClass)]
+#[class(tool,init,base=Resource)]
+pub struct Trim {
+    #[export]
+    pub positive_action_name_to_respond: GString,
+
+    #[export]
+    pub negative_action_name_to_respond: GString,
+
+    #[export]
+    pub step: f32,
+    #[export]
+    pub max_aoa_change: f32,
+    #[export]
+    pub min_aoa_change: f32,
+    pub current_aoa_change: f32,
+}
 
 #[derive(GodotClass)]
 #[class(tool,init,base=Resource)]
@@ -13,40 +32,47 @@ pub struct Flap {
     pub action_name_to_respond: GString,
 
     #[export]
-    pub aoa_change: f32,
+    pub rotation: f32,
 }
+
 #[derive(GodotClass)]
 #[class(tool,init,base=Node3D)]
 pub struct Wing {
+    // used as a base rotation for applying rotation from flap.
+    base_rotation: Vector3,
     #[export]
-    pub aerodynamic_center_chord_part: f32,
+    aerodynamic_center_chord_part: f32,
     #[export]
-    pub flaps: Array<Gd<Flap>>,
+    rotation_direction_from_flaps: Vector3,
     #[export]
-    pub dry_mass: f32,
+    flaps: Array<Gd<Flap>>,
+    #[export]
+    trims: Array<Gd<Trim>>,
+    #[export]
+    dry_mass: f32,
     #[export]
     pub max_fuel_mass: f32,
     pub current_fuel_mass: f32,
     #[export]
-    pub debug_airfoil_height: f32,
+    debug_airfoil_height: f32,
     #[export]
-    pub center_of_mass_offset: Vector3,
+    center_of_mass_offset: Vector3,
 
     pub aoa: f32,
 
     #[export]
-    pub root_point: Vector3,
+    pub(crate) root_point: Vector3,
     #[export]
-    pub root_chord: f32,
+    root_chord: f32,
     #[export]
-    pub tip_point: Vector3,
+    pub(crate) tip_point: Vector3,
     #[export]
-    pub tip_chord: f32,
+    tip_chord: f32,
 
     #[export]
-    pub debug_scale: f32,
+    debug_scale: f32,
     #[export]
-    pub coefficient_lu: OnEditor<Gd<CoefficientLU>>,
+    coefficient_lu: OnEditor<Gd<CoefficientLU>>,
 
     #[export]
     debug_draw_3d: OnEditor<Gd<Node3D>>,
@@ -67,6 +93,45 @@ pub struct AerodynamicVectors {
 }
 
 impl Wing {
+    /// Geometric center of mass of the trapezoidal wing + com offset, in the wing's local space.
+    pub fn center_of_mass_local(&self) -> Vector3 {
+        let span = self.tip_point - self.root_point;
+        let span_len = span.length();
+        if span_len == 0.0 {
+            return self.root_point;
+        }
+        let lambda = if self.root_chord == 0.0 {
+            0.0
+        } else {
+            self.tip_chord / self.root_chord
+        };
+        // Distance from root along span as a fraction of the span length.
+        let t = (1.0 + 2.0 * lambda) / (3.0 * (1.0 + lambda));
+        let geometric_center_of_mass = self.root_point + span * t;
+        geometric_center_of_mass + self.center_of_mass_offset
+    }
+    /// Moment of inertia about the wing's center of mass, expressed
+    /// in the wing's principal axes (x = span, y = normal, z = chord).
+    pub fn inertia_about_com(&self) -> Vector3 {
+        let mass = self.total_mass();
+        let span_len = self.tip_point.distance_to(self.root_point);
+        let root_chord = self.root_chord;
+        let tip_chord = self.tip_chord;
+        if mass == 0.0 || span_len == 0.0 || root_chord + tip_chord == 0.0 {
+            return Vector3::ZERO;
+        }
+        // I about the span axis (rotation around the span).
+        let i_span = mass * (root_chord * root_chord + tip_chord * tip_chord) / 24.0;
+        // I about the chord axis (rotation around the mean chord).
+        let i_chord = mass
+            * span_len
+            * span_len
+            * (root_chord * root_chord + 4.0 * root_chord * tip_chord + tip_chord * tip_chord)
+            / (18.0 * (root_chord + tip_chord).powi(2));
+        // I about the normal axis (perpendicular to the wing plane).
+        let i_normal = i_span + i_chord;
+        Vector3::new(i_span, i_normal, i_chord)
+    }
     fn draw_sphere(&mut self, pos: Vector3, radious: f32, color: Color) {
         self.debug_draw_3d.call(
             "draw_sphere",
@@ -157,7 +222,7 @@ impl Wing {
             (2. / 3.) * self.root_chord * (1. + lambda + lambda * lambda) / (1. + lambda)
         }
     }
-    fn flaps_effect(&self) -> f32 {
+    fn flaps_and_trims_effect(&self) -> f32 {
         if Engine::singleton().is_editor_hint() {
             0.
         } else {
@@ -165,8 +230,22 @@ impl Wing {
             let mut effect = 0.;
             for gd in self.flaps.iter_shared() {
                 let flap = gd.bind();
-                effect += flap.aoa_change
+                effect += flap.rotation
                     * input.get_action_strength(&flap.action_name_to_respond.to_string());
+            }
+            for mut gd in self.trims.iter_shared() {
+                let mut trim = gd.bind_mut();
+
+                let input = input
+                    .is_action_just_pressed(&trim.negative_action_name_to_respond.to_string())
+                    as i32
+                    - input
+                        .is_action_just_pressed(&trim.positive_action_name_to_respond.to_string())
+                        as i32;
+                trim.current_aoa_change = (trim.current_aoa_change + trim.step * input as f32)
+                    .clamp(trim.min_aoa_change, trim.max_aoa_change);
+
+                effect += trim.current_aoa_change;
             }
             effect
         }
@@ -225,8 +304,6 @@ impl Wing {
                 let velocity_chord = relative_air_velocity.dot(chord_dir);
                 velocity_normal.atan2(velocity_chord).to_degrees()
             };
-            aoa += self.flaps_effect();
-
             self.aoa = aoa;
 
             self.coefficients(speed, aoa)
@@ -299,9 +376,24 @@ impl Wing {
             self.debug_scale,
         );
         self.draw_sphere(
-            global_pos + base_transform.basis * self.center_of_mass_offset,
+            global_pos + base_transform.basis * self.center_of_mass_local(),
             self.debug_scale / 50.,
             Color::GREEN,
         );
+    }
+    pub fn update_flaps_effect(&mut self) {
+        if !Engine::singleton().is_editor_hint() {
+            let rotation_amount = self.flaps_and_trims_effect();
+            let rotation = self.base_rotation
+                + self.rotation_direction_from_flaps * rotation_amount * PI / 180.0;
+            self.base_mut().set_rotation(rotation);
+        }
+    }
+}
+
+#[godot_api]
+impl INode3D for Wing {
+    fn ready(&mut self) {
+        self.base_rotation = self.base().get_rotation();
     }
 }

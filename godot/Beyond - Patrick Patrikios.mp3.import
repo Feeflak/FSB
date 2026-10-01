@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b6uvprj64euec"
+path="res://.godot/imported/Beyond - Patrick Patrikios.mp3-3b4231f7ed0a80f87af2560cee5e99c5.mp3str"
+
+[deps]
+
+source_file="res://Beyond - Patrick Patrikios.mp3"
+dest_files=["res://.godot/imported/Beyond - Patrick Patrikios.mp3-3b4231f7ed0a80f87af2560cee5e99c5.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

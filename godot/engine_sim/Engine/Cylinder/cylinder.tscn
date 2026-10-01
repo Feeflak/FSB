@@ -1,0 +1,50 @@
+[gd_scene load_steps=9 format=3 uid="uid://bbychswvrpwhn"]
+
+[ext_resource type="Script" uid="uid://br8ltumy454oj" path="res://Engine/Cylinder/Cylinder.cs" id="1_iliq6"]
+[ext_resource type="Shader" uid="uid://d2po6ur3ne678" path="res://GassVisualization.gdshader" id="2_24tyf"]
+[ext_resource type="Script" uid="uid://uqcqw4fkolyo" path="res://Engine/Cylinder/CylinderVisuals.cs" id="3_505kq"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_nxogm"]
+top_radius = 1.0
+bottom_radius = 1.0
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5juve"]
+albedo_color = Color(0.509286, 0.509286, 0.509286, 1)
+metallic = 1.0
+metallic_specular = 1.0
+
+[sub_resource type="Gradient" id="Gradient_y2354"]
+interpolation_mode = 2
+interpolation_color_space = 2
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ni31j"]
+gradient = SubResource("Gradient_y2354")
+width = 500
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5juve"]
+render_priority = 0
+shader = ExtResource("2_24tyf")
+shader_parameter/pressureSampler = SubResource("GradientTexture1D_ni31j")
+shader_parameter/pressure = 0.0
+shader_parameter/minPressure = -100000.0
+shader_parameter/maxPressure = 999999.0
+
+[node name="Cylinder5" type="Node3D" node_paths=PackedStringArray("visuals")]
+script = ExtResource("1_iliq6")
+visuals = NodePath("visuals")
+
+[node name="pistone" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_nxogm")
+surface_material_override/0 = SubResource("StandardMaterial3D_5juve")
+
+[node name="gas" type="MeshInstance3D" parent="."]
+mesh = SubResource("CylinderMesh_nxogm")
+surface_material_override/0 = SubResource("ShaderMaterial_5juve")
+
+[node name="visuals" type="Node3D" parent="." node_paths=PackedStringArray("gasInsideCylinder", "piston")]
+script = ExtResource("3_505kq")
+gasInsideCylinder = NodePath("../gas")
+piston = NodePath("../pistone")
