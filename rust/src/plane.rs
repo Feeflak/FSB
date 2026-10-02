@@ -47,13 +47,13 @@ pub(crate) struct Plane {
     // Reused between physics_process and process for debug drawing.
     last_wing_effects: Vec<WingEffect>,
 
-    // Throttling the aerodynamics loop saves a lot of CPU. Forces are still
-    // applied every physics frame, but only recomputed at this rate.
     #[export]
-    #[init(val = 60.0)]
+    #[init(val = 500.0)]
     aero_update_rate: f32,
     aero_timer: f32,
     cached_aero_effects: Vec<WingEffect>,
+
+    g_force: f32,
 }
 pub struct UIInfo {
     pub velocity_kmh: u32,
@@ -203,7 +203,6 @@ impl Plane {
     }
 
     pub fn get_ui_info(&self) -> UIInfo {
-        let rb = self.base();
         let velocity_kmh = self.get_velocity_kmh();
         let altitude_m = self.base().get_global_position().y;
         let aoa = if velocity_kmh > 5 {
@@ -212,12 +211,7 @@ impl Plane {
             0.
         };
 
-        let g = {
-            let t = 1.0 / self.speed_sample_rate;
-            let speed_delta = self.base().get_linear_velocity() - self.last_speed;
-            let local_accel_y = (rb.get_global_basis().inverse() * speed_delta).y / t;
-            (local_accel_y + 9.8) / 9.8
-        };
+        let g = self.g_force;
         let mach = air::get_match_number(velocity_kmh as f32 / 3.6, altitude_m);
 
         UIInfo {
@@ -306,6 +300,13 @@ impl IRigidBody3D for Plane {
 
         if self.speed_sample_timer > 1. / self.speed_sample_rate {
             self.speed_sample_timer = 0.;
+            let sample_period = 1. / self.speed_sample_rate;
+            let speed_delta = air_speed - self.last_speed;
+            let world_accel = speed_delta / sample_period;
+            let gravity = Vector3::new(0.0, -9.8, 0.0);
+            let proper_accel_local =
+                self.base().get_global_basis().inverse() * (world_accel - gravity);
+            self.g_force = proper_accel_local.y / 9.8;
             self.last_speed = air_speed;
         }
 

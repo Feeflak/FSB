@@ -154,13 +154,10 @@ impl INode3D for CamManager {
     }
 
     fn process(&mut self, delta: f32) {
-        self.ui_update_timer += delta;
-        if self.ui_update_timer < self.ui_update_rate {
-            return;
-        }
-        self.ui_update_timer = 0.;
-        let fps = 1. / delta;
-        self.fps.set_text(&(fps as u32).to_string());
+        self.draw_flight_direction();
+        self.draw_artificial_horizon();
+        self.draw_nose_direction();
+
         if !Engine::singleton().is_editor_hint() {
             if Input::singleton().is_action_just_pressed("cam") {
                 self.cam_idx = (self.cam_idx + 1) % self.cameras.len();
@@ -170,9 +167,13 @@ impl INode3D for CamManager {
             self.handle_cam_movement(delta);
         }
 
-        self.draw_flight_direction();
-        self.draw_artificial_horizon();
-        self.draw_nose_direction();
+        self.ui_update_timer += delta;
+        if self.ui_update_timer < 1. / self.ui_update_rate {
+            return;
+        }
+        self.ui_update_timer = 0.;
+        let fps = 1. / delta;
+        self.fps.set_text(&(fps as u32).to_string());
 
         let ui_info = self.plane.bind().get_ui_info();
         self.altitude.set_text(&ui_info.altitude_m.to_string());

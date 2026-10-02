@@ -2724,12 +2724,12 @@ metadata/_custom_type_script = "uid://dfcupjxxdf7pq"
 [sub_resource type="Resource" id="Resource_meb7l"]
 script = ExtResource("14_h8e4i")
 shapes = [SubResource("Resource_o4fqm")]
-maximal_height_delta_inside_the_shapes = 20.0
+maximal_height_delta_inside_the_shapes = 300.0
 spawn_chance = 1.0
 model = ExtResource("13_come4")
 scale_change_amplitude = 0.3
 min_distance_from_grid_border_in_mesh_chunks = 1
-generation_attempts_per_structure_chunk = 15
+generation_attempts_per_structure_chunk = 30
 metadata/_custom_type_script = "uid://w1egd0ivsh5v"
 
 [sub_resource type="Resource" id="Resource_w30ff"]
@@ -2741,7 +2741,7 @@ metadata/_custom_type_script = "uid://dfcupjxxdf7pq"
 [sub_resource type="Resource" id="Resource_xy6fp"]
 script = ExtResource("14_h8e4i")
 shapes = [SubResource("Resource_w30ff")]
-maximal_height_delta_inside_the_shapes = 100.0
+maximal_height_delta_inside_the_shapes = 200.0
 spawn_chance = 1.0
 model = ExtResource("16_0cp0l")
 base_scale = 1.5
@@ -2759,7 +2759,7 @@ metadata/_custom_type_script = "uid://dfcupjxxdf7pq"
 [sub_resource type="Resource" id="Resource_yj5sn"]
 script = ExtResource("14_h8e4i")
 shapes = [SubResource("Resource_uws2o")]
-maximal_height_delta_inside_the_shapes = 100.0
+maximal_height_delta_inside_the_shapes = 200.0
 spawn_chance = 1.0
 model = ExtResource("17_d2t1y")
 base_scale = 1.5
@@ -3025,12 +3025,11 @@ line_width = 25.8
 
 [node name="Plane" type="Plane" parent="." unique_id=309672855 node_paths=PackedStringArray("drive_train", "aoa_label_wing", "wings", "debug_draw_3d")]
 drive_train = NodePath("Drivetrain")
-speed_sample_rate = 0.1
+speed_sample_rate = 60.0
 last_speed = Vector3(0, -1.81, 96.89)
 aoa_label_wing = NodePath("FR")
 wings = [NodePath("FR"), NodePath("FL"), NodePath("BL"), NodePath("BU"), NodePath("BR"), NodePath("Chassis"), NodePath("FlapFR"), NodePath("FlapFL"), NodePath("FlapBL"), NodePath("FlapBR")]
 debug_draw_3d = NodePath("../DebugDraw3D")
-aero_update_rate = 500.0
 transform = Transform3D(0.9999997, 0, 0, 0, 1.0000006, 0, 0, 0, 0.99999994, 797.4995, 872.425, -4584.2866)
 mass = 2230.0
 physics_material_override = SubResource("PhysicsMaterial_qsp4k")
@@ -3813,7 +3812,7 @@ plane = NodePath("..")
 cameras = [NodePath("../cam_1"), NodePath("../cam_2")]
 cam_rotation_offset = Vector3(0, -180, 0)
 cam_sensitivity = Vector2(80, -80)
-cam_max_yaw_pitch_deg = Vector2(40, 40)
+cam_max_yaw_pitch_deg = Vector2(100, 90)
 artificial_horizon = NodePath("../CanvasLayer/hud/artificial horizon")
 nose_direction = NodePath("../CanvasLayer/hud/nose")
 flight_direction = NodePath("../CanvasLayer/hud/dir")
@@ -3822,6 +3821,7 @@ altitude = NodePath("../CanvasLayer/hud/static/altitude/Label")
 mach = NodePath("../CanvasLayer/hud/static/VBoxContainer/Mach/mach")
 g = NodePath("../CanvasLayer/hud/static/VBoxContainer/G/G")
 aoa = NodePath("../CanvasLayer/hud/static/VBoxContainer2/Control/AoA")
+ui_update_rate = 60.0
 fps = NodePath("../CanvasLayer/hud/static/VBoxContainer/fps/fps")
 transform = Transform3D(1, 0, 0, 0, 1.0000001, 0, 0, 0, 1, 0, 0, 0)
 
@@ -4021,7 +4021,7 @@ offset_top = -1.0
 offset_right = 41.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "1"
+text = "1.9"
 
 [node name="Label" type="Label" parent="Plane/CanvasLayer/hud/static/VBoxContainer/G/G" unique_id=1118489915]
 layout_mode = 0
@@ -4044,7 +4044,7 @@ offset_top = -1.0
 offset_right = 41.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "53"
+text = "68"
 
 [node name="Label" type="Label" parent="Plane/CanvasLayer/hud/static/VBoxContainer/fps/fps" unique_id=284552629]
 layout_mode = 0
@@ -4173,7 +4173,7 @@ airDensity = 1.2771419
 airTemperature = 290.98538
 frontalAirVelocity = 193.78003
 gearRatio = 1.0
-starterSpeed = 50.0
+starterSpeed = 5.0
 enginePhysicsUpdatesPerSecond = 2000.0
 dragModifier = 0.5
 enable = true
