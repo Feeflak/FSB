@@ -55,6 +55,7 @@
 [ext_resource type="Script" uid="uid://bx5dm3v24ouvl" path="res://ground/GroundMeshGen.cs" id="27_abqjc"]
 [ext_resource type="Script" uid="uid://duat4j40jft0v" path="res://ground/TerrainAspectEffectOnMesh.cs" id="28_6iyjs"]
 [ext_resource type="Script" uid="uid://bmni8uj46ikxf" path="res://objects/ObjestsGeneration/ObjectsGenerator.cs" id="29_4w656"]
+[ext_resource type="Texture2D" uid="uid://c6baebbyuvbp4" path="res://ground textures/military_trenches_ground_dirt_rough_02_yd0lacrs_1k/yd0lacrs_1K_Basecolor.jpg" id="56_e71vb"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qsp4k"]
 friction = 0.34
@@ -2728,6 +2729,7 @@ spawn_chance = 1.0
 model = ExtResource("13_come4")
 scale_change_amplitude = 0.3
 min_distance_from_grid_border_in_mesh_chunks = 1
+generation_attempts_per_structure_chunk = 15
 metadata/_custom_type_script = "uid://w1egd0ivsh5v"
 
 [sub_resource type="Resource" id="Resource_w30ff"]
@@ -2951,7 +2953,7 @@ seamless = true
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_vimvf"]
 sky_top_color = Color(0.20824888, 0.577609, 0.9999942, 1)
-sky_horizon_color = Color(0.6203545, 0.7790852, 0.965982, 1)
+sky_horizon_color = Color(0.5633636, 0.74770075, 0.9578181, 1)
 sky_curve = 0.39585498
 sky_cover = SubResource("NoiseTexture2D_ijoax")
 sky_cover_modulate = Color(0.3994281, 0.39942774, 0.39942777, 1)
@@ -2977,9 +2979,14 @@ ssil_enabled = true
 sdfgi_enabled = true
 sdfgi_read_sky_light = false
 glow_enabled = true
-fog_density = 0.054
+fog_enabled = true
+fog_mode = 1
+fog_light_color = Color(0.6046924, 0.79682034, 0.9508254, 1)
+fog_density = 1.0
 fog_aerial_perspective = 0.145
-fog_sky_affect = 0.326
+fog_sky_affect = 0.0
+fog_depth_begin = 369.9
+fog_depth_end = 595.4
 volumetric_fog_density = 0.4938
 volumetric_fog_emission_energy = 0.0
 volumetric_fog_anisotropy = 0.29
@@ -2992,7 +2999,15 @@ auto_exposure_enabled = true
 auto_exposure_scale = 0.55
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e71vb"]
-albedo_color = Color(0.39308554, 0.3930855, 0.39308548, 1)
+albedo_texture = ExtResource("56_e71vb")
+uv1_scale = Vector3(0.7, 0.7, 0.7)
+uv1_offset = Vector3(2.135, 0, 0)
+uv1_triplanar = true
+uv1_triplanar_sharpness = 5.0239286
+uv1_world_triplanar = true
+uv2_scale = Vector3(61, 61, 61)
+distance_fade_mode = 3
+distance_fade_max_distance = 45.65
 
 [sub_resource type="BoxMesh" id="BoxMesh_s8a0o"]
 material = SubResource("StandardMaterial3D_e71vb")
@@ -3016,12 +3031,12 @@ aoa_label_wing = NodePath("FR")
 wings = [NodePath("FR"), NodePath("FL"), NodePath("BL"), NodePath("BU"), NodePath("BR"), NodePath("Chassis"), NodePath("FlapFR"), NodePath("FlapFL"), NodePath("FlapBL"), NodePath("FlapBR")]
 debug_draw_3d = NodePath("../DebugDraw3D")
 aero_update_rate = 500.0
-transform = Transform3D(0.9999997, 0, 0, 0, 1.0000006, 0, 0, 0, 0.99999994, 36.11, 872.425, -5254.567)
+transform = Transform3D(0.9999997, 0, 0, 0, 1.0000006, 0, 0, 0, 0.99999994, 797.4995, 872.425, -4584.2866)
 mass = 2230.0
 physics_material_override = SubResource("PhysicsMaterial_qsp4k")
 center_of_mass_mode = 1
-center_of_mass = Vector3(0.15964112, -0.039845265, -2.483469)
-inertia = Vector3(10183.5, 14071.797, 3949.6997)
+center_of_mass = Vector3(0.15965079, -0.039845265, -2.483469)
+inertia = Vector3(10183.5, 14071.834, 3949.7346)
 linear_velocity = Vector3(0, -1.81, 96.89)
 angular_damp = 2.268
 
@@ -3785,11 +3800,13 @@ transform = Transform3D(1, 0, 0, 0, 1.0000002, 0, 0, 0, 1, -0.661953, -1.6405029
 shape = SubResource("SphereShape3D_k05f4")
 
 [node name="cam_1" type="Camera3D" parent="Plane" unique_id=1955040209]
-transform = Transform3D(-1.9999992, 0, 1.7484557e-07, 0, 2.0000005, 0, -1.7484548e-07, 0, -2.0000002, -1.6010742, 7.166565, -19.66211)
+transform = Transform3D(-1.9995251, -0.010182267, 0.042412296, 0, 1.9447391, 0.46688944, -0.043617435, 0.46677867, -1.9442778, -1.6154785, 7.1557617, -19.648438)
 current = true
+far = 700.0
 
 [node name="cam_2" type="Camera3D" parent="Plane" unique_id=1250248387]
-transform = Transform3D(-2.0000005, 0, -1.7484554e-07, 0, 1.9999988, 0, 1.748456e-07, 0, -1.9999999, 0.0029469447, 0.70983887, -2.5952148)
+transform = Transform3D(-1.9993155, 0.009805109, 0.051421728, 0, 1.9646025, -0.37461093, -0.05234819, -0.37448278, -1.9639306, 0.0009765625, 0.71398926, -2.5732422)
+far = 700.0
 
 [node name="CamManager" type="CamManager" parent="Plane" unique_id=699978294 node_paths=PackedStringArray("plane", "cameras", "artificial_horizon", "nose_direction", "flight_direction", "velocity", "altitude", "mach", "g", "aoa", "fps")]
 plane = NodePath("..")
@@ -3825,13 +3842,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.00073
-offset_top = -2.25
-offset_right = 100.00073
-offset_bottom = 2.25
+offset_left = -100.00017
+offset_top = -2.562876
+offset_right = 100.0002
+offset_bottom = 1.937124
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset = Vector2(100.00073, 2.25)
+pivot_offset = Vector2(100.00018, 2.25)
 
 [node name="Panel" type="Panel" parent="Plane/CanvasLayer/hud/artificial horizon" unique_id=759520508]
 layout_mode = 1
@@ -3858,14 +3875,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -250.0
-offset_top = -250.0
-offset_right = 250.0
-offset_bottom = 250.0
+offset_left = -250.03015
+offset_top = -250.31377
+offset_right = 249.97168
+offset_bottom = 249.688
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.09, 0.09)
-pivot_offset = Vector2(250, 250)
+pivot_offset = Vector2(250.00092, 250.00089)
 texture = ExtResource("3_seu75")
 
 [node name="dir" type="TextureRect" parent="Plane/CanvasLayer/hud" unique_id=1407809815]
@@ -3875,14 +3892,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -250.0
-offset_top = -249.97565
-offset_right = 250.0
-offset_bottom = 250.02435
+offset_left = -250.02953
+offset_top = -250.28748
+offset_right = 249.97133
+offset_bottom = 249.71301
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.045, 0.045)
-pivot_offset = Vector2(250, 250)
+pivot_offset = Vector2(250.00043, 250.00024)
 texture = ExtResource("4_htxhm")
 
 [node name="static" type="Control" parent="Plane/CanvasLayer/hud" unique_id=421059571]
@@ -4027,7 +4044,7 @@ offset_top = -1.0
 offset_right = 41.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "68"
+text = "53"
 
 [node name="Label" type="Label" parent="Plane/CanvasLayer/hud/static/VBoxContainer/fps/fps" unique_id=284552629]
 layout_mode = 0
@@ -4176,7 +4193,6 @@ volumeMinMax = Vector2(1, 5)
 stream = SubResource("AudioStreamGenerator_h8e4i")
 volume_db = 1.0
 pitch_scale = 0.001
-autoplay = true
 mix_target = 2
 bus = &"Engine"
 
@@ -4359,10 +4375,11 @@ liftBasedOnAoA = SubResource("Curve_f6a44")
 [node name="Generation controller" type="Node3D" parent="Main scene" unique_id=1772107324 node_paths=PackedStringArray("player", "ground_mesh_gen", "biome_generator", "ground_shader_controller", "objects_generator", "structure_gen")]
 transform = Transform3D(1.11, 0, 0, 0, 1.11, 0, 0, 0, 1.11, 0, 0, 0)
 script = ExtResource("3_qsp4k")
-terrain_chunk_size = 300
+terrain_chunk_size = 500
 biomes = [ExtResource("4_kq58d"), ExtResource("5_seu75"), ExtResource("6_htxhm"), ExtResource("7_jq2sk"), ExtResource("8_4k2k6"), ExtResource("9_0rl1p"), ExtResource("10_ok6jj")]
 max_main_thread_chunk_instantiation_per_frame = 1
-player = NodePath("../../DebugDraw3D")
+player = NodePath("../../Plane")
+view_distance_chunks = 9
 chunk_prefab = ExtResource("11_facbu")
 ground_mesh_gen = NodePath("../ground mesh gen")
 biome_generator = NodePath("../biome generator")
@@ -4376,11 +4393,12 @@ light_energy = 1.574
 light_indirect_energy = 0.0
 light_volumetric_fog_energy = 2.236
 shadow_enabled = true
+directional_shadow_max_distance = 523.5
 
 [node name="structure gen" type="Node" parent="Main scene" unique_id=976059663]
 script = ExtResource("12_b1qrp")
 structure_pool = [SubResource("Resource_meb7l"), SubResource("Resource_xy6fp"), SubResource("Resource_yj5sn")]
-mesh_chunks_per_structure_grid_cell = 20
+mesh_chunks_per_structure_grid_cell = 40
 
 [node name="biome generator" type="Node" parent="Main scene" unique_id=1876212071 node_paths=PackedStringArray("terrain_aspects_solver")]
 script = ExtResource("18_gngh3")
@@ -4427,10 +4445,9 @@ roughness_effect = SubResource("Resource_euc68")
 [node name="objects generator" type="Node" parent="Main scene" unique_id=396190395 node_paths=PackedStringArray("ground_mesh_gen")]
 script = ExtResource("29_4w656")
 ground_mesh_gen = NodePath("../ground mesh gen")
-minimal_tree_spacing = 10.0
-base_tree_spawn_chance = 0.166
+minimal_tree_spacing = 20.0
+base_tree_spawn_chance = 0.619
 rock_spawn_attempts_per_mesh_chunk = 2
-grass_spawn_attempts_per_mesh_chunk = 100
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="Main scene" unique_id=1132014786]
 environment = SubResource("Environment_fv2he")
