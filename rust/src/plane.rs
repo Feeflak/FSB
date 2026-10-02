@@ -15,6 +15,7 @@ pub(crate) struct Plane {
     #[export]
     drive_train: OnEditor<Gd<Node>>,
     #[export]
+    #[init(val = 10.0)]
     //Hz
     speed_sample_rate: f32,
     speed_sample_timer: f32,
@@ -210,9 +211,13 @@ impl Plane {
         } else {
             0.
         };
-        let speed_delta = self.last_speed - self.base().get_linear_velocity();
-        let up_speed_delta = (rb.get_global_basis().inverse() * speed_delta).y;
-        let g = up_speed_delta / 9.8;
+
+        let g = {
+            let t = 1.0 / self.speed_sample_rate;
+            let speed_delta = self.base().get_linear_velocity() - self.last_speed;
+            let local_accel_y = (rb.get_global_basis().inverse() * speed_delta).y / t;
+            (local_accel_y + 9.8) / 9.8
+        };
         let mach = air::get_match_number(velocity_kmh as f32 / 3.6, altitude_m);
 
         UIInfo {
@@ -249,6 +254,12 @@ struct WingEffect {
 
 #[godot_api]
 impl IRigidBody3D for Plane {
+    fn ready(&mut self) {
+        // Start the speed sample from the current velocity so the G-force
+        // readout doesn't spike on the first frame.
+        self.last_speed = self.base().get_linear_velocity();
+    }
+
     fn process(&mut self, _delta: f64) {
         let is_editor = Engine::singleton().is_editor_hint();
 

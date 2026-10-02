@@ -6,17 +6,19 @@ cutoff_hz = 1.0
 
 [sub_resource type="AudioEffectFilter" id="AudioEffectFilter_y6g6q"]
 resource_name = "Filter"
-cutoff_hz = 4098.0
+cutoff_hz = 140.0
 resonance = 1.0
 gain = 4.0
 db = 1
 
 [sub_resource type="AudioEffectEQ" id="AudioEffectEQ_7mrbl"]
 resource_name = "EQ"
-band_db/32_hz = -10.0
-band_db/100_hz = -0.2
-band_db/320_hz = 1.0
-band_db/3200_hz = 1.0
+band_db/32_hz = 1.7
+band_db/100_hz = -60.0
+band_db/320_hz = 10.7
+band_db/1000_hz = 12.6
+band_db/3200_hz = -60.0
+band_db/10000_hz = -60.0
 
 [sub_resource type="AudioEffectStereoEnhance" id="AudioEffectStereoEnhance_6nlox"]
 resource_name = "StereoEnhance"
@@ -26,11 +28,11 @@ surround = 0.25
 
 [sub_resource type="AudioEffectReverb" id="AudioEffectReverb_m4icp"]
 resource_name = "Reverb"
-room_size = 0.09
+room_size = 0.23
 damping = 0.33
 spread = 0.09
 hipass = 0.08
-dry = 0.4
+dry = 0.46
 wet = 0.1
 
 [sub_resource type="AudioEffectFilter" id="AudioEffectFilter_7an57"]
@@ -48,17 +50,17 @@ band_db/32_hz = -18.8
 band_db/100_hz = -17.5
 
 [resource]
-bus/0/volume_db = -14.062227
+bus/0/volume_db = 0.0694828
 bus/0/effect/0/effect = SubResource("AudioEffectHighPassFilter_uwrvb")
 bus/0/effect/0/enabled = false
 bus/1/name = &"Engine"
 bus/1/solo = false
 bus/1/mute = false
 bus/1/bypass_fx = false
-bus/1/volume_db = -5.3299403
+bus/1/volume_db = -36.032845
 bus/1/send = &"Master"
 bus/1/effect/0/effect = SubResource("AudioEffectFilter_y6g6q")
-bus/1/effect/0/enabled = true
+bus/1/effect/0/enabled = false
 bus/1/effect/1/effect = SubResource("AudioEffectEQ_7mrbl")
 bus/1/effect/1/enabled = true
 bus/1/effect/2/effect = SubResource("AudioEffectStereoEnhance_6nlox")

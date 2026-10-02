@@ -118,7 +118,7 @@ hold_idle={
 
 [physics]
 
-common/physics_ticks_per_second=1000
+common/physics_ticks_per_second=500
 common/max_physics_steps_per_frame=100
 3d/physics_engine="Jolt Physics"
 

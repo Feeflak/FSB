@@ -39,6 +39,9 @@ struct CamManager {
     g: OnEditor<Gd<Label>>,
     #[export]
     aoa: OnEditor<Gd<Label>>,
+    #[export]
+    ui_update_rate: f32,
+    ui_update_timer: f32,
 
     #[export]
     fps: OnEditor<Gd<Label>>,
@@ -115,7 +118,7 @@ impl CamManager {
         );
     }
 
-    fn handle_cam_movement(&mut self, delta_time: f64) {
+    fn handle_cam_movement(&mut self, delta_time: f32) {
         let mut cam = self.get_current_cam();
         let cam_yaw = Input::singleton().get_action_strength("cam_yaw_right")
             - Input::singleton().get_action_strength("cam_yaw_left");
@@ -127,7 +130,7 @@ impl CamManager {
                 cam_pitch * self.cam_sensitivity.x,
                 cam_yaw * self.cam_sensitivity.y,
                 0.,
-            ) * (delta_time as f32);
+            ) * delta_time;
         rot = rot.clamp(
             Vector3::new(
                 -self.cam_max_yaw_pitch_deg.x,
@@ -150,7 +153,12 @@ impl INode3D for CamManager {
         self.cameras.get(self.cam_idx).unwrap().make_current();
     }
 
-    fn process(&mut self, delta: f64) {
+    fn process(&mut self, delta: f32) {
+        self.ui_update_timer += delta;
+        if self.ui_update_timer < self.ui_update_rate {
+            return;
+        }
+        self.ui_update_timer = 0.;
         let fps = 1. / delta;
         self.fps.set_text(&(fps as u32).to_string());
         if !Engine::singleton().is_editor_hint() {
@@ -165,6 +173,7 @@ impl INode3D for CamManager {
         self.draw_flight_direction();
         self.draw_artificial_horizon();
         self.draw_nose_direction();
+
         let ui_info = self.plane.bind().get_ui_info();
         self.altitude.set_text(&ui_info.altitude_m.to_string());
         self.velocity.set_text(&ui_info.velocity_kmh.to_string());

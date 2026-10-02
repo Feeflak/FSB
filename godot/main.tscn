@@ -3015,7 +3015,7 @@ last_speed = Vector3(0, -1.81, 96.89)
 aoa_label_wing = NodePath("FR")
 wings = [NodePath("FR"), NodePath("FL"), NodePath("BL"), NodePath("BU"), NodePath("BR"), NodePath("Chassis"), NodePath("FlapFR"), NodePath("FlapFL"), NodePath("FlapBL"), NodePath("FlapBR")]
 debug_draw_3d = NodePath("../DebugDraw3D")
-aero_update_rate = 1000.0
+aero_update_rate = 500.0
 transform = Transform3D(0.9999997, 0, 0, 0, 1.0000006, 0, 0, 0, 0.99999994, 36.11, 872.425, -5254.567)
 mass = 2230.0
 physics_material_override = SubResource("PhysicsMaterial_qsp4k")
@@ -4004,7 +4004,7 @@ offset_top = -1.0
 offset_right = 41.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "0"
+text = "1"
 
 [node name="Label" type="Label" parent="Plane/CanvasLayer/hud/static/VBoxContainer/G/G" unique_id=1118489915]
 layout_mode = 0
@@ -4027,7 +4027,7 @@ offset_top = -1.0
 offset_right = 41.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "60"
+text = "68"
 
 [node name="Label" type="Label" parent="Plane/CanvasLayer/hud/static/VBoxContainer/fps/fps" unique_id=284552629]
 layout_mode = 0
@@ -4167,7 +4167,10 @@ enable = true
 script = ExtResource("5_jq2sk")
 player = NodePath("SoundPlayer")
 waveGen = NodePath("WaveGen")
-volumeMinMax = Vector2(1, 11)
+engine_sound_initial_timeout = 1.0
+test_rpm = 3000.0
+test_throttle = 1.0
+volumeMinMax = Vector2(1, 5)
 
 [node name="SoundPlayer" type="AudioStreamPlayer" parent="Plane/Drivetrain/Engine/EngineSound" unique_id=1349136392]
 stream = SubResource("AudioStreamGenerator_h8e4i")
@@ -4185,7 +4188,6 @@ cylindersOffset = 1122.5
 frequency = 100.0
 amplitude = 4.05
 dutyCycle = 0.35
-Duration = 0.1
 NoiseVolume = 1.0
 distortion = false
 DistortionAmount = 9.595
@@ -4202,10 +4204,10 @@ heatHandler = NodePath("HeatHandler")
 rpmLimit = 3000.0
 idleRPMTarget = 800
 idleThrottlePercentage = 1.0
-mechanicalDragModifier = 0.8
+mechanicalDragModifier = 100.0
 pressureChangeFrictionModifier = 0.0
-boreDm = 0.9
-displacementDm3 = 0.6158429
+boreDm = 0.7
+displacementDm3 = 0.37254694
 strokeLengthDm = 0.8680439
 additionalUpwardHeightDm = 0.1
 pistonHeightCm = 0.1
@@ -4346,7 +4348,7 @@ script = ExtResource("19_qnost")
 hubRadius = 0.1
 bladeElements = 20
 blades = 3
-bladeLength = 0.7
+bladeLength = 0.85
 chordBasedOnDistanceFromBeginningOfBlade = SubResource("Curve_0n3wm")
 bladeAngleBasedOnDistanceFromBeginningOfBladeRad = SubResource("Curve_qnost")
 dragBasedOnAoA = SubResource("Curve_wnkbs")
@@ -4356,7 +4358,6 @@ liftBasedOnAoA = SubResource("Curve_f6a44")
 
 [node name="Generation controller" type="Node3D" parent="Main scene" unique_id=1772107324 node_paths=PackedStringArray("player", "ground_mesh_gen", "biome_generator", "ground_shader_controller", "objects_generator", "structure_gen")]
 transform = Transform3D(1.11, 0, 0, 0, 1.11, 0, 0, 0, 1.11, 0, 0, 0)
-visible = false
 script = ExtResource("3_qsp4k")
 terrain_chunk_size = 300
 biomes = [ExtResource("4_kq58d"), ExtResource("5_seu75"), ExtResource("6_htxhm"), ExtResource("7_jq2sk"), ExtResource("8_4k2k6"), ExtResource("9_0rl1p"), ExtResource("10_ok6jj")]
