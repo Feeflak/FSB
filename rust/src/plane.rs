@@ -15,6 +15,8 @@ pub(crate) struct Plane {
     #[export]
     drive_train: OnEditor<Gd<Node>>,
     #[export]
+    wind_sound_controller: OnEditor<Gd<Node>>,
+    #[export]
     #[init(val = 10.0)]
     //Hz
     speed_sample_rate: f32,
@@ -263,6 +265,10 @@ impl IRigidBody3D for Plane {
     }
 
     fn process(&mut self, _delta: f64) {
+        self.wind_sound_controller
+            .set("currentGForce", &self.g_force.to_variant());
+        let speed = &self.get_velocity_kmh().to_variant();
+        self.wind_sound_controller.set("Speed", speed);
         let is_editor = Engine::singleton().is_editor_hint();
 
         // In the editor refresh mass stats every frame so the inspector edits

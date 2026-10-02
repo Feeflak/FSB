@@ -35,8 +35,10 @@
 [ext_resource type="Script" uid="uid://bdyfbuaytxbci" path="res://engine_sim/Engine/EngineHeatHandler.cs" id="11_gngh3"]
 [ext_resource type="Script" uid="uid://br8ltumy454oj" path="res://engine_sim/Engine/Cylinder/Cylinder.cs" id="12_0n3wm"]
 [ext_resource type="Script" uid="uid://b7vnabd1g6tr8" path="res://structures/StructureGen.cs" id="12_b1qrp"]
+[ext_resource type="Script" uid="uid://c5w7w3ufwgei7" path="res://wind/WindController.cs" id="12_rnkwl"]
 [ext_resource type="PackedScene" uid="uid://dwae3jwam7b45" path="res://structures/modles/test_structure_model.tscn" id="13_come4"]
 [ext_resource type="Script" uid="uid://c0x5rause6t86" path="res://engine_sim/Engine/EngineUI.cs" id="13_qnost"]
+[ext_resource type="Script" uid="uid://b0l23sfjywuau" path="res://wind/PureNoise.cs" id="13_vke2r"]
 [ext_resource type="Script" uid="uid://w1egd0ivsh5v" path="res://structures/StructureType.cs" id="14_h8e4i"]
 [ext_resource type="Script" uid="uid://dfcupjxxdf7pq" path="res://structures/structure_shapes/RectangleStructureShape.cs" id="15_4lmeg"]
 [ext_resource type="PackedScene" uid="uid://cyk0s20hihm3p" path="res://structures/modles/low_poly_city/Separate_assets_fbx/Eco_Building_Grid.fbx" id="16_0cp0l"]
@@ -2635,6 +2637,18 @@ size = Vector3(13.349243, 0.5048828, 6.510563)
 [sub_resource type="SphereShape3D" id="SphereShape3D_k05f4"]
 radius = 0.3255914
 
+[sub_resource type="Curve" id="Curve_vrawv"]
+_limits = [0.0, 1.0, -3.0, 10.0]
+_data = [Vector2(-3, 0.77805173), 0.0, 0.0, 0, 0, Vector2(1.0203159, 0.27250308), 0.0, 0.0, 0, 0, Vector2(10, 1), 0.08601412, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_rnkwl"]
+_data = [Vector2(0, 1), 0.0, -1.4962202, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_h8e4i"]
+buffer_length = 0.1
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vrawv"]
 bg_color = Color(0, 1, 0, 1)
 corner_radius_top_left = 5
@@ -2692,9 +2706,6 @@ cache/0/16/0/descent = 0.0
 cache/0/16/0/underline_position = 0.0
 cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
-
-[sub_resource type="AudioStreamGenerator" id="AudioStreamGenerator_h8e4i"]
-buffer_length = 0.1
 
 [sub_resource type="Curve" id="Curve_0n3wm"]
 _data = [Vector2(0, 0.17611027), 0.0, 0.0, 0, 0, Vector2(1, 0.090909064), -0.15409827, 0.0, 0, 0]
@@ -3024,8 +3035,9 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 debug_visible = false
 line_width = 25.8
 
-[node name="Plane" type="Plane" parent="." unique_id=309672855 node_paths=PackedStringArray("drive_train", "aoa_label_wing", "wings", "debug_draw_3d")]
+[node name="Plane" type="Plane" parent="." unique_id=309672855 node_paths=PackedStringArray("drive_train", "wind_sound_controller", "aoa_label_wing", "wings", "debug_draw_3d")]
 drive_train = NodePath("Drivetrain")
+wind_sound_controller = NodePath("WindSoundController")
 speed_sample_rate = 60.0
 last_speed = Vector3(0, -1.81, 96.89)
 aoa_label_wing = NodePath("FR")
@@ -3812,6 +3824,30 @@ far = 700.0
 transform = Transform3D(-1.9993155, 0.009805109, 0.051421728, 0, 1.9646025, -0.37461093, -0.05234819, -0.37448278, -1.9639306, 0.0009765625, 0.71398926, -2.5732422)
 far = 700.0
 
+[node name="WindSoundController" type="Node" parent="Plane" unique_id=784131407 node_paths=PackedStringArray("player")]
+script = ExtResource("12_rnkwl")
+player = NodePath("SoundPlayer2")
+MaxSpeed = 800.0
+Speed = 697
+volumeMinMax = Vector2(-35, 25)
+currentGForce = 1.999999
+GSoundVolume = SubResource("Curve_vrawv")
+HighGEffectSoundVolume = SubResource("Curve_rnkwl")
+
+[node name="SoundPlayer2" type="AudioStreamPlayer" parent="Plane/WindSoundController" unique_id=1934745575]
+stream = SubResource("AudioStreamGenerator_h8e4i")
+volume_db = 1.0
+autoplay = true
+mix_target = 2
+bus = &"Wind"
+
+[node name="noise" type="Node" parent="Plane/WindSoundController" unique_id=902025806 node_paths=PackedStringArray("Player")]
+script = ExtResource("13_vke2r")
+Player = NodePath("../SoundPlayer2")
+NoiseVolume = 0.5
+DistortionAmount = 4.0
+FeedbackAmount = 0.5
+
 [node name="CamManager" type="CamManager" parent="Plane" unique_id=699978294 node_paths=PackedStringArray("plane", "cameras", "artificial_horizon", "nose_direction", "flight_direction", "velocity", "altitude", "mach", "g", "aoa", "fps")]
 plane = NodePath("..")
 cameras = [NodePath("../cam_1"), NodePath("../cam_2")]
@@ -4049,7 +4085,7 @@ offset_top = -1.0
 offset_right = 41.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "49"
+text = "54"
 
 [node name="Label" type="Label" parent="Plane/CanvasLayer/hud/static/VBoxContainer/fps/fps" unique_id=284552629]
 layout_mode = 0
@@ -4371,7 +4407,7 @@ script = ExtResource("19_qnost")
 hubRadius = 0.1
 bladeElements = 20
 blades = 3
-bladeLength = 0.85
+bladeLength = 0.87
 chordBasedOnDistanceFromBeginningOfBlade = SubResource("Curve_0n3wm")
 bladeAngleBasedOnDistanceFromBeginningOfBladeRad = SubResource("Curve_qnost")
 dragBasedOnAoA = SubResource("Curve_wnkbs")

@@ -50,7 +50,7 @@ band_db/32_hz = -18.8
 band_db/100_hz = -17.5
 
 [resource]
-bus/0/volume_db = 0.0694828
+bus/0/volume_db = 2.2514858
 bus/0/effect/0/effect = SubResource("AudioEffectHighPassFilter_uwrvb")
 bus/0/effect/0/enabled = false
 bus/1/name = &"Engine"
