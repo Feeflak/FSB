@@ -95,12 +95,15 @@ impl CamManager {
     }
 
     fn draw_flight_direction(&mut self) {
+        let velocity = self.plane.get_linear_velocity();
+        let direction = if velocity.length() < 5.0 {
+            self.plane.get_global_basis() * Vector3::FORWARD
+        } else {
+            velocity.normalized()
+        };
         self.position_control_based_on_unprojected_offset(
             self.flight_direction.clone(),
-            self.plane
-                .get_linear_velocity()
-                .try_normalized()
-                .unwrap_or(Vector3::ZERO),
+            direction,
             0.,
         );
     }
