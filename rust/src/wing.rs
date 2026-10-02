@@ -61,6 +61,12 @@ pub struct Wing {
     pub aoa: f32,
 
     #[export]
+    #[init(val = 0.8)]
+    oswald_efficiency: f32,
+    #[init(val = 1.0)]
+    pub(crate) induced_drag_multiplier: f32,
+
+    #[export]
     pub(crate) root_point: Vector3,
     #[export]
     root_chord: f32,
@@ -86,7 +92,6 @@ pub struct AerodynamicData {
 }
 
 pub struct AerodynamicVectors {
-    pub force: Vector3,
     pub torque: Vector3,
     pub lift: Vector3,
     pub drag: Vector3,
@@ -270,8 +275,7 @@ impl Wing {
 
         let span_dir = (tip_global - root_global).normalized_or_zero();
         let forward_global = basis * Vector3::FORWARD;
-        let chord_dir =
-            (forward_global - span_dir * forward_global.dot(span_dir)).normalized();
+        let chord_dir = (forward_global - span_dir * forward_global.dot(span_dir)).normalized();
         let up_global = basis * Vector3::UP;
         let mut normal_dir = span_dir.cross(chord_dir).normalized();
         if normal_dir.dot(up_global) < 0.0 {
@@ -313,19 +317,28 @@ impl Wing {
 
         let q = 0.5 * air_density * speed * speed;
         let lift = lift_dir * wing_area * q * coefficients.lift;
-        let drag = relative_air_velocity.normalized_or_zero() * wing_area * q * coefficients.drag;
-        let torque = basis.col_a()
-            * self.mean_aerodynamic_chord()
-            * wing_area
-            * q
-            * coefficients.pitch;
 
-        AerodynamicVectors {
-            force: lift + drag,
-            torque,
-            lift,
-            drag,
-        }
+        // Add finite-wing induced drag so high-lift manoeuvres (turns, pulls)
+        // bleed airspeed realistically. The 2D polar Cd does not include this.
+        let aspect_ratio = if wing_area > 0.0 {
+            span_len * span_len / wing_area
+        } else {
+            1.0
+        };
+        let induced_drag_coefficient = if aspect_ratio > 0.0 && self.oswald_efficiency > 0.0 {
+            coefficients.lift * coefficients.lift
+                / (PI * aspect_ratio * self.oswald_efficiency)
+                * self.induced_drag_multiplier
+        } else {
+            0.0
+        };
+        let total_drag_coefficient = coefficients.drag + induced_drag_coefficient;
+
+        let drag = relative_air_velocity.normalized_or_zero() * wing_area * q * total_drag_coefficient;
+        let torque =
+            basis.col_a() * self.mean_aerodynamic_chord() * wing_area * q * coefficients.pitch;
+
+        AerodynamicVectors { torque, lift, drag }
     }
 
     pub fn draw_debug_arrows(
@@ -346,7 +359,11 @@ impl Wing {
         self.draw_debug_visuals(&vectors, global_air_velocity);
     }
 
-    pub fn draw_debug_visuals(&mut self, vectors: &AerodynamicVectors, global_air_velocity: Vector3) {
+    pub fn draw_debug_visuals(
+        &mut self,
+        vectors: &AerodynamicVectors,
+        global_air_velocity: Vector3,
+    ) {
         self.draw_your_shape();
         let base_transform = self.base().get_global_transform();
 

@@ -26,7 +26,15 @@ pub(crate) struct Plane {
     aoa_label_wing: OnEditor<Gd<Wing>>,
 
     #[export]
-    thrust: f32,
+    global_drag_modifier: f32,
+
+    #[export]
+    global_lift_modifier: f32,
+
+    #[export]
+    #[init(val = 1.0)]
+    global_induced_drag_modifier: f32,
+
     #[export]
     wings: Array<Gd<Wing>>,
     #[export]
@@ -280,7 +288,6 @@ impl IRigidBody3D for Plane {
             self.draw_sphere(com_global, 0.5, Color::GOLD);
             for (mut wing, effect) in self.wings.iter_shared().zip(self.last_wing_effects.iter()) {
                 let vectors = crate::wing::AerodynamicVectors {
-                    force: effect.force,
                     torque: effect.torque,
                     lift: effect.lift,
                     drag: effect.drag,
@@ -334,6 +341,10 @@ impl IRigidBody3D for Plane {
             self.cached_aero_effects.clear();
             self.cached_aero_effects.reserve(self.wings.len());
 
+            for mut wing in self.wings.iter_shared() {
+                wing.bind_mut().induced_drag_multiplier = self.global_induced_drag_modifier;
+            }
+
             let angular_velocity = self.base().get_angular_velocity();
             for mut wing in self.wings.iter_shared() {
                 let mut wing_bind = wing.bind_mut();
@@ -347,34 +358,20 @@ impl IRigidBody3D for Plane {
                 );
                 let pos = wing_bind.base().get_global_position() - base_pos;
                 self.cached_aero_effects.push(WingEffect {
-                    force: aero_vectors.force,
+                    force: aero_vectors.lift * self.global_lift_modifier
+                        + aero_vectors.drag * self.global_drag_modifier,
                     torque: aero_vectors.torque,
-                    lift: aero_vectors.lift,
-                    drag: aero_vectors.drag,
+                    lift: aero_vectors.lift * self.global_lift_modifier,
+                    drag: aero_vectors.drag * self.global_drag_modifier,
                     pos,
                 });
             }
         }
 
         let input = Input::singleton();
-        let thrust = self.thrust
-            * if is_editor {
-                0.
-            } else {
-                input.get_action_strength("throttle")
-            };
-
-        self.draw_arrow(
-            base_pos,
-            base_pos + base_basis.col_c().normalized_or_zero() * self.thrust,
-            Color::MAGENTA,
-            1.,
-        );
-        let thrust_vector = base_basis.col_c().normalized_or_zero() * thrust;
 
         let effects = self.cached_aero_effects.clone();
         let mut rb = self.base_mut();
-        rb.apply_force(thrust_vector);
 
         for effect in &effects {
             rb.apply_force_ex(effect.force).position(effect.pos).done();

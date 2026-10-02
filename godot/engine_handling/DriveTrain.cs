@@ -39,6 +39,11 @@ public partial class DriveTrain : Node
         [Export] bool enable;
         [Export] float engineShutdownDrag = 200;
 
+        // Global thrust scaling. Lower this to reduce acceleration/climb while
+        // keeping a similar top speed by also tuning the plane's drag modifier.
+        [Export(PropertyHint.Range, "0.01,2,0.01")]
+        private float thrustMultiplier = 1.0f;
+
         public float PropellerAngularVelocity => currentAngularVelocity * gearRatio;
         private void HandlePhysics(float delta)
         {
@@ -52,6 +57,8 @@ public partial class DriveTrain : Node
 
                 propeller.HandlePhysics(delta, frontalAirVelocity, airDensity, PropellerAngularVelocity, out float thrust, out float propellerDrag, out string aoaDebug);
                 ui.angleOfAttackOfTip.Text = "angles of attack of propeller elements: \n" + aoaDebug;
+
+                thrust *= thrustMultiplier;
                 ApplyThrust(thrust);
 
                 currentThrust = thrust;
