@@ -12,7 +12,7 @@ public partial class NoiseAndSin : Node
 
         [Export] public int culindersCount;
         [Export] public float cylindersOffset;
-        [Export] public float frequency = 1.0f; // Hertz
+        [Export] public float frequency = 1.0f; 
         [Export] public float amplitude = 1.0f;
         [Export] float dutyCycle = 0.5f; // Fraction of the period the wave is high (0.0 to 1.0)
 
