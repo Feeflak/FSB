@@ -7,7 +7,7 @@ use godot::{
     prelude::*,
 };
 
-use crate::{air, wing::Wing};
+use crate::{HighGEffectController::HighGEffectController, air, wing::Wing};
 
 #[derive(GodotClass)]
 #[class(tool,init,base=RigidBody3D)]
@@ -16,6 +16,10 @@ pub(crate) struct Plane {
     drive_train: OnEditor<Gd<Node>>,
     #[export]
     wind_sound_controller: OnEditor<Gd<Node>>,
+
+    #[export]
+    high_g_effect_controller: OnEditor<Gd<HighGEffectController>>,
+
     #[export]
     #[init(val = 10.0)]
     //Hz
@@ -267,6 +271,9 @@ impl IRigidBody3D for Plane {
     fn process(&mut self, _delta: f64) {
         self.wind_sound_controller
             .set("currentGForce", &self.g_force.to_variant());
+        self.high_g_effect_controller
+            .bind_mut()
+            .update_g_effect(self.g_force, _delta as f32);
         let speed = &self.get_velocity_kmh().to_variant();
         self.wind_sound_controller.set("Speed", speed);
         let is_editor = Engine::singleton().is_editor_hint();

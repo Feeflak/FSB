@@ -3,6 +3,7 @@ pub mod coefficient_lu;
 pub mod air;
 pub mod plane;
 pub mod cam;
+pub mod HighGEffectController;
 
 use godot::prelude::*;
 

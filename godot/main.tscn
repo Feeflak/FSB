@@ -2639,7 +2639,7 @@ radius = 0.3255914
 
 [sub_resource type="Curve" id="Curve_vrawv"]
 _limits = [0.0, 1.0, -3.0, 10.0]
-_data = [Vector2(-3, 0.77805173), 0.0, 0.0, 0, 0, Vector2(1.0203159, 0.27250308), 0.0, 0.0, 0, 0, Vector2(10, 1), 0.08601412, 0.0, 0, 0]
+_data = [Vector2(-3, 0.77805173), 0.0, 0.0, 0, 0, Vector2(1.0056431, 0.27120668), 0.05402326, 0.05402326, 0, 0, Vector2(10, 1), 0.08601412, 0.0, 0, 0]
 point_count = 3
 
 [sub_resource type="Curve" id="Curve_rnkwl"]
@@ -2707,6 +2707,18 @@ cache/0/16/0/underline_position = 0.0
 cache/0/16/0/underline_thickness = 0.0
 cache/0/16/0/scale = 1.0
 
+[sub_resource type="Gradient" id="Gradient_vke2r"]
+interpolation_mode = 2
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vrawv"]
+gradient = SubResource("Gradient_vke2r")
+width = 500
+height = 500
+fill = 1
+fill_from = Vector2(0.53205127, 0.49786323)
+fill_to = Vector2(0, 1)
+
 [sub_resource type="Curve" id="Curve_0n3wm"]
 _data = [Vector2(0, 0.17611027), 0.0, 0.0, 0, 0, Vector2(1, 0.090909064), -0.15409827, 0.0, 0, 0]
 point_count = 2
@@ -2725,6 +2737,11 @@ point_count = 3
 _limits = [0.0, 1.5, -5.0, 25.0]
 _data = [Vector2(-5, 0.3366214), 0.0, 0.0, 0, 0, Vector2(17.07675, 0.80107534), 0.0, 0.0, 0, 0, Vector2(25, 0.5913979), 0.0, 0.0, 0, 0]
 point_count = 3
+
+[sub_resource type="Curve" id="Curve_s8a0o"]
+_limits = [-2.0, 1.5, -5.0, 12.0]
+_data = [Vector2(-5, 1.5), 0.0, 0.0, 0, 0, Vector2(-2.2945821, 0.5080148), 0.0, 0.0, 0, 0, Vector2(-0.5485325, -1.9963006), 0.0, 0.0, 0, 0, Vector2(3.7494364, 0.002986908), 0.2640029, 0.2640029, 0, 0, Vector2(12, 1.5), 0.13230702, 0.0, 0, 0]
+point_count = 5
 
 [sub_resource type="Resource" id="Resource_o4fqm"]
 script = ExtResource("15_4lmeg")
@@ -3035,9 +3052,10 @@ transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 debug_visible = false
 line_width = 25.8
 
-[node name="Plane" type="Plane" parent="." unique_id=309672855 node_paths=PackedStringArray("drive_train", "wind_sound_controller", "aoa_label_wing", "wings", "debug_draw_3d")]
+[node name="Plane" type="Plane" parent="." unique_id=309672855 node_paths=PackedStringArray("drive_train", "wind_sound_controller", "high_g_effect_controller", "aoa_label_wing", "wings", "debug_draw_3d")]
 drive_train = NodePath("Drivetrain")
 wind_sound_controller = NodePath("WindSoundController")
+high_g_effect_controller = NodePath("high_g_effect")
 speed_sample_rate = 60.0
 last_speed = Vector3(0, -1.81, 96.89)
 aoa_label_wing = NodePath("FR")
@@ -3883,10 +3901,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -100.00017
-offset_top = -2.562876
-offset_right = 100.0002
-offset_bottom = 1.937124
+offset_left = -99.9895
+offset_top = -219.22946
+offset_right = 100.010864
+offset_bottom = -214.72946
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(100.00018, 2.25)
@@ -3916,10 +3934,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -250.03015
-offset_top = -250.31377
-offset_right = 249.97168
-offset_bottom = 249.688
+offset_left = -270.27625
+offset_top = -466.98035
+offset_right = 229.72559
+offset_bottom = 33.021423
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.09, 0.09)
@@ -3933,14 +3951,14 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -250.02953
-offset_top = -250.28748
-offset_right = 249.97133
-offset_bottom = 249.71301
+offset_left = -270.18518
+offset_top = -449.19818
+offset_right = 229.81567
+offset_bottom = 50.80237
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.045, 0.045)
-pivot_offset = Vector2(250.00043, 250.00024)
+pivot_offset = Vector2(250.00043, 250.00027)
 texture = ExtResource("4_htxhm")
 
 [node name="static" type="Control" parent="Plane/CanvasLayer/hud" unique_id=421059571]
@@ -4085,7 +4103,7 @@ offset_top = -1.0
 offset_right = 41.0
 offset_bottom = 22.0
 theme_override_colors/font_color = Color(0, 1, 0, 1)
-text = "54"
+text = "42"
 
 [node name="Label" type="Label" parent="Plane/CanvasLayer/hud/static/VBoxContainer/fps/fps" unique_id=284552629]
 layout_mode = 0
@@ -4201,6 +4219,16 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0, 1, 0, 1)
 text = "RPM: 0"
 horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="Plane/CanvasLayer" unique_id=936372502]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 11.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_vrawv")
 
 [node name="Drivetrain" type="Node" parent="Plane" unique_id=1525671954 node_paths=PackedStringArray("rb", "propeller", "crankshaft", "engine", "ui")]
 script = ExtResource("8_0n3wm")
@@ -4412,6 +4440,12 @@ chordBasedOnDistanceFromBeginningOfBlade = SubResource("Curve_0n3wm")
 bladeAngleBasedOnDistanceFromBeginningOfBladeRad = SubResource("Curve_qnost")
 dragBasedOnAoA = SubResource("Curve_wnkbs")
 liftBasedOnAoA = SubResource("Curve_f6a44")
+
+[node name="high_g_effect" type="HighGEffectController" parent="Plane" unique_id=972802878 node_paths=PackedStringArray("wind_sound_controller")]
+wind_sound_controller = NodePath("../WindSoundController")
+gradient = SubResource("Gradient_vke2r")
+effect_change_based_on_g = SubResource("Curve_s8a0o")
+effect_change_modifier = 0.9
 
 [node name="Main scene" type="Node3D" parent="." unique_id=325302715]
 
