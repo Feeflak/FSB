@@ -1,7 +1,7 @@
 use std::f32::consts::PI;
 
 use godot::{
-    classes::{Engine, IRigidBody3D, Input},
+    classes::{Engine, Input},
     prelude::*,
 };
 
@@ -318,23 +318,24 @@ impl Wing {
         let q = 0.5 * air_density * speed * speed;
         let lift = lift_dir * wing_area * q * coefficients.lift;
 
-        // Add finite-wing induced drag so high-lift manoeuvres (turns, pulls)
-        // bleed airspeed realistically. The 2D polar Cd does not include this.
         let aspect_ratio = if wing_area > 0.0 {
             span_len * span_len / wing_area
         } else {
             1.0
         };
+
+        // finite-wing induced drag: high-lift manoeuvres (turns, pulls)
+        // bleed airspeed realistically.
         let induced_drag_coefficient = if aspect_ratio > 0.0 && self.oswald_efficiency > 0.0 {
-            coefficients.lift * coefficients.lift
-                / (PI * aspect_ratio * self.oswald_efficiency)
+            coefficients.lift * coefficients.lift / (PI * aspect_ratio * self.oswald_efficiency)
                 * self.induced_drag_multiplier
         } else {
             0.0
         };
         let total_drag_coefficient = coefficients.drag + induced_drag_coefficient;
 
-        let drag = relative_air_velocity.normalized_or_zero() * wing_area * q * total_drag_coefficient;
+        let drag =
+            relative_air_velocity.normalized_or_zero() * wing_area * q * total_drag_coefficient;
         let torque =
             basis.col_a() * self.mean_aerodynamic_chord() * wing_area * q * coefficients.pitch;
 
