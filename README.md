@@ -2,7 +2,7 @@
 Flight simulator I've made for [this video](TODOAddLink).
 
 It includes:
-- configurable airfoil aerodynamics simulation based on aerodynamic coefficients from xfoil files with finite wing approximation.
+- configurable airfoil aerodynamics simulation based on aerodynamic coefficients from xfoil csv files with finite wing approximation.
 - center of mass calculation.
 - procedural, infinite terrain generation from [my other project](https://github.com/Feeflak/procedural_terrain_generationV2).
 - engine simulation from [my other project](https://github.com/Feeflak/Engine_Simulation).
